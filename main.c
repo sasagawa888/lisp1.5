@@ -727,8 +727,6 @@ int eval(int addr)
 		return (res);
 	}
     } else if (listp(addr)) {
-	if ((symbolp(car(addr))) && (HAS_NAME(car(addr), "quote")))
-	    return (cadr(addr));
 	if ((symbolp(car(addr))) && (HAS_NAME(car(addr), "quasi-quote")))
 	    return (eval(quasi_transfer2(cadr(addr), 0)));
 	if (numberp(car(addr)))
@@ -1144,6 +1142,7 @@ void initsubr(void)
     defsubr("numberp", f_numberp);
     defsubr("symbolp", f_symbolp);
     defsubr("listp", f_listp);
+    deffsubr("quote", f_quote);
     deffsubr("setq", f_setq);
     deffsubr("defun", f_defun);
     deffsubr("lambda", f_lambda);
@@ -1528,6 +1527,15 @@ int f_apply(int arglist)
 
 
 //--FSUBR-----------
+int f_quote(int arglist)
+{
+    int arg1;
+
+    checkarg(LEN1_TEST, "quote", arglist);
+    arg1 = car(arglist);
+    return(arg1);
+}
+
 int f_setq(int arglist)
 {
     int arg1, arg2;

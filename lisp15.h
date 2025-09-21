@@ -205,6 +205,7 @@ int f_append(int addr);
 int f_nullp(int addr);
 int f_atomp(int addr);
 int f_eq(int addr);
+int f_quote(int addr);
 int f_setq(int addr);
 int f_oblist(int addr);
 int f_defun(int addr);
