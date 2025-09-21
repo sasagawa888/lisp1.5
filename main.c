@@ -1208,17 +1208,12 @@ int f_difference(int arglist)
 
 int f_minus(int arglist)
 {
-    int arg, res;
+    int arg1;
 
     checkarg(NUMLIST_TEST, "minus", arglist);
-    res = GET_NUMBER(car(arglist));
-    arglist = cdr(arglist);
-    while (!(IS_NIL(arglist))) {
-	arg = GET_NUMBER(car(arglist));
-	arglist = cdr(arglist);
-	res = res - arg;
-    }
-    return (makenum(res));
+    checkarg(LEN1_TEST, "minus", arglist);
+    arg1 = car(arglist);
+    return (makenum(GET_NUMBER(arg1)*-1));
 }
 
 int f_mult(int arglist)
