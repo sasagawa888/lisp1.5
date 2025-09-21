@@ -1146,7 +1146,7 @@ void initsubr(void)
     deffsubr("setq", f_setq);
     deffsubr("defun", f_defun);
     deffsubr("lambda", f_lambda);
-    deffsubr("macro", f_defmacro);
+    deffsubr("macro", f_macro);
     deffsubr("if", f_if);
     deffsubr("begin", f_progn);
     deffsubr("cond", f_cond);
@@ -1552,7 +1552,7 @@ int f_lambda(int arglist)
     return(makefunc(arglist));
 }
 
-int f_defmacro(int arglist)
+int f_macro(int arglist)
 {
     int arg1, arg2;
 
