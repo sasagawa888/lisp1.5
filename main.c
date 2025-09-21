@@ -1112,7 +1112,7 @@ void initsubr(void)
     defsubr("plus", f_plus);
     defsubr("difference", f_difference);
     defsubr("minus", f_minus);
-    defsubr("times", f_mult);
+    defsubr("times", f_times);
     defsubr("quotient", f_quotient);
     defsubr("add1", f_add1);
     defsubr("sub1", f_sub1);
@@ -1216,7 +1216,7 @@ int f_minus(int arglist)
     return (makenum(GET_NUMBER(arg1)*-1));
 }
 
-int f_mult(int arglist)
+int f_times(int arglist)
 {
     int arg, res;
 
