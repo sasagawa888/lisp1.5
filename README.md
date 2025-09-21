@@ -24,7 +24,7 @@ Exit the interpreter by typing:
 (quit)
 ```
 
-functions
+## Functions
 
 ```
 LISP 1.5
@@ -33,6 +33,19 @@ LISP 1.5
 > 
 
 ```
+
+## Example
+
+```
+LISP 1.5
+> (defun fact (n) (if (eq n 0) 1 (times n (fact (sub1 n)))))
+t
+> (fact 10)
+3628800
+> 
+
+```
+
 
 ## Notes
 
