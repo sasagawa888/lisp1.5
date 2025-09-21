@@ -1613,7 +1613,7 @@ int f_begin(int arglist)
     return (res);
 }
 
-//--------準クオート---------------
+//--------quasi-quote---------------
 int quasi_transfer1(int x)
 {
     if (nullp(x))
