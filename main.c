@@ -1110,6 +1110,7 @@ void bindmacro(char *name, int addr)
 void initsubr(void)
 {
     defsubr("plus", f_plus);
+    defsubr("difference", f_difference);
     defsubr("minus", f_minus);
     defsubr("times", f_mult);
     defsubr("quotient", f_quotient);
@@ -1193,6 +1194,16 @@ int f_sub1(int arglist)
     checkarg(NUMLIST_TEST, "sub1", arglist);
     number1 = GET_NUMBER(car(arglist));
     return (makenum(number1-1));
+}
+
+int f_difference(int arglist)
+{
+    int arg1,arg2;
+    checkarg(NUMLIST_TEST, "difference", arglist);
+    checkarg(LEN2_TEST, "difference", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(makenum(GET_NUMBER(arg1)-GET_NUMBER(arg2)));
 }
 
 int f_minus(int arglist)

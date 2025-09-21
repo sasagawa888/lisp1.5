@@ -187,6 +187,7 @@ int isnumlis(int arg);
 
 //---subr-------
 int f_plus(int addr);
+int f_difference(int addr);
 int f_minus(int addr);
 int	f_mult(int addr);
 int f_quotient(int addr);
