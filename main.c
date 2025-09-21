@@ -1142,6 +1142,8 @@ void initsubr(void)
     defsubr("numberp", f_numberp);
     defsubr("symbolp", f_symbolp);
     defsubr("listp", f_listp);
+    defsubr("assoc", f_assoc);
+    defsubr("set", f_set);
     deffsubr("quote", f_quote);
     deffsubr("setq", f_setq);
     deffsubr("defun", f_defun);
@@ -1330,9 +1332,21 @@ int f_list(int arglist)
     return (list(arglist));
 }
 
+int f_assoc(int arglist)
+{
+    int arg1,arg2;
+
+    checkarg(LEN2_TEST, "assoc", arglist);
+    checkarg(SYMBOL_TEST, "assoc", car(arglist));
+    checkarg(LIST_TEST, "assoc", cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(assoc(arg1,arg2));
+}
+
 int f_append(int arglist)
 {
-    checkarg(LEN2_TEST, "atom", arglist);
+    checkarg(LEN2_TEST, "append", arglist);
     return (append(car(arglist), cadr(arglist)));
 }
 
@@ -1524,6 +1538,19 @@ int f_apply(int arglist)
     arg2 = cadr(arglist);
     return (apply(arg1, arg2));
 }
+
+int f_set(int arglist)
+{
+    int arg1, arg2;
+
+    checkarg(LEN2_TEST, "set", arglist);
+    checkarg(SYMBOL_TEST, "set", car(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    bindsym(arg1, arg2);
+    return (T);
+}
+
 
 
 //--FSUBR-----------
