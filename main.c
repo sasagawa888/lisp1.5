@@ -56,8 +56,8 @@ void initcell(void)
     for (x = 0; x < HASHTBSIZE; x++)
 	cell_hash_table[x] = NIL;
 
-
-    //0番地はnil、環境レジスタを設定する。初期環境
+    // Address 0 is NIL; set up the environment registers.
+    // This is the initial environment."
     ep = makesym("nil");
     assocsym(makesym("nil"), NIL);
     assocsym(makesym("t"), makesym("t"));
@@ -77,8 +77,8 @@ int freshcell(void)
     return (res);
 }
 
-//deep-bindによる。シンボルが見つからなかったら登録。
-//見つかったらそこに値をいれておく。
+// Done via deep-bind. If the symbol is not found, register it.
+// If found, store the value there.
 void bindsym(int sym, int val)
 {
     int addr;
@@ -90,9 +90,9 @@ void bindsym(int sym, int val)
 	SET_CDR(addr, val);
 }
 
-//変数の束縛
-//ローカル変数の場合は以前の束縛に積み上げていく。
-//したがって同じ変数名があったとしても書き変えない。
+// Variable binding
+// For local variables, bindings are stacked on top of previous ones.
+// Therefore, even if the same variable name exists, it is not overwritten.
 void assocsym(int sym, int val)
 {
     ep = cons(cons(sym, val), ep);
@@ -100,10 +100,10 @@ void assocsym(int sym, int val)
 
 
 
-//環境は次のように連想リストになっている。
-// env = ((sym1 . val1) (sym2 . val2) ...(t . t)(nil . 0))
-// assocでシンボルに対応する値を探す。
-//見つからなかった場合には-1を返す。
+// The environment is represented as an association list like this:
+// env = ((sym1 . val1) (sym2 . val2) ... (t . t) (nil . 0))
+// Use `assoc` to find the value corresponding to a symbol.
+// If not found, it returns -1.
 int findsym(int sym)
 {
     int addr;
@@ -116,7 +116,7 @@ int findsym(int sym)
 	return (cdr(addr));
 }
 
-//シンボルの唯一性を確保するためのもの
+// Used to ensure the uniqueness of symbols
 int getsym(char *name, int index)
 {
     int addr;
@@ -165,7 +165,7 @@ int hash(char *name)
     return (res % HASHTBSIZE);
 }
 
-//-------デバッグ用------------------    
+//-------for debug------------------    
 void cellprint(int addr)
 {
     switch (GET_FLAG(addr)) {
@@ -207,8 +207,7 @@ void cellprint(int addr)
     printf("%07d ", GET_BIND(addr));
     printf("%s \n", GET_NAME(addr));
 }
-
-//ヒープダンプ    
+   
 void heapdump(int start, int end)
 {
     int i;
@@ -220,7 +219,7 @@ void heapdump(int start, int end)
     }
 }
 
-//---------ガベージコレクション-----------
+//---------GC-----------
 void gbc(void)
 {
     int addr;
@@ -278,19 +277,19 @@ void gbcmark(void)
 {
     int addr, i;
 
-    //oblistをマークする。
+    //Mark oblist
     markoblist();
-    //oblistからつながっているcellをマークする。
+    // Mark the cells linked from the oblist.
     addr = ep;
     while (!(nullp(addr))) {
 	markcell(car(addr));
 	addr = cdr(addr);
     }
-    //argstackからbindされているcellをマークする。
+    // Mark the cells that are bound from the argstack.
     for (i = 0; i < ap; i++)
 	markcell(argstk[i]);
 
-    //シンボルハッシュテーブルにつながっているcellをマークする。
+    // Mark the cells linked from the symbol hash table.
     for (i = 0; i < HASHTBSIZE; i++)
 	markcell(cell_hash_table[i]);
 }
@@ -322,14 +321,14 @@ void clrcell(int addr)
     SET_BIND(addr, 0);
 }
 
-//自由セルが一定数を下回った場合にはgbcを起動する。
+// If the number of free cells falls below a certain threshold, trigger GBC.
 void checkgbc(void)
 {
     if (fc < FREESIZE)
 	gbc();
 }
 
-//--------------リスト操作---------------------
+//--------------list---------------------
 
 int car(int addr)
 {
@@ -440,7 +439,7 @@ int makesym(char *name)
 }
 
 
-//スタック。ep環境ポインタの保存用
+// Stack. Used to save the environment pointer (EP).
 void push(int pt)
 {
     stack[sp++] = pt;
@@ -451,7 +450,7 @@ int pop(void)
     return (stack[--sp]);
 }
 
-//arglistスタックのpush/pop
+// Push/pop for the arglist stack
 void argpush(int addr)
 {
     argstk[ap++] = addr;
@@ -1108,6 +1107,8 @@ void initsubr(void)
     defsubr("minus", f_minus);
     defsubr("times", f_mult);
     defsubr("quotient", f_quotient);
+    defsubr("add1", f_add1);
+    defsubr("sub1", f_sub1);
     defsubr("quit", f_quit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
@@ -1137,7 +1138,7 @@ void initsubr(void)
     defsubr("listp", f_listp);
     deffsubr("setq", f_setq);
     deffsubr("defun", f_defun);
-    deffsubr("defmacro", f_defmacro);
+    deffsubr("macro", f_defmacro);
     deffsubr("if", f_if);
     deffsubr("begin", f_begin);
     deffsubr("cond", f_cond);
@@ -1157,6 +1158,24 @@ int f_plus(int arglist)
 	res = res + arg;
     }
     return (makenum(res));
+}
+
+int f_add1(int arglist)
+{
+    int number1;
+
+    checkarg(NUMLIST_TEST, "add1", arglist);
+    number1 = GET_NUMBER(car(arglist));
+    return (makenum(number1+1));
+}
+
+int f_sub1(int arglist)
+{
+    int number1;
+
+    checkarg(NUMLIST_TEST, "sub1", arglist);
+    number1 = GET_NUMBER(car(arglist));
+    return (makenum(number1-1));
 }
 
 int f_minus(int arglist)
