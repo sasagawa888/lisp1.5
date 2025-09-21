@@ -35,8 +35,8 @@ functions
 
 ## Notes
 
-    This is not a full Lisp 1.5 implementation, but a simplified version that captures the feel of the original.
+This is not a full Lisp 1.5 implementation, but a simplified version that captures the feel of the original.
 
-    Dynamic scoping is used.
+Dynamic scoping is used.
 
-    Core functions like QUOTE, ATOM, EQ, CONS, CAR, CDR, and COND are implemented.
+Core functions like QUOTE, ATOM, EQ, CONS, CAR, CDR, and COND are implemented.
