@@ -1,6 +1,5 @@
 /*
-written by kenichi sasagawa 2016/3
-special thanks to Tsuyoshi Uema
+written by kenichi sasagawa
 */
 
 #include <stdio.h>
