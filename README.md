@@ -23,6 +23,16 @@ Exit the interpreter by typing:
 ```
 (quit)
 ```
+
+functions
+
+```
+> (oblist)
+(nil t plus minus times div quit hdmp car cdr cons list append eq null atom oblist gbc read eval apply print = > >= < <= numberp symbolp listp setq defun defmacro if begin cond)
+> 
+
+```
+
 ## Notes
 
     This is not a full Lisp 1.5 implementation, but a simplified version that captures the feel of the original.
