@@ -1048,14 +1048,14 @@ int isnumlis(int arg)
 
 
 
-//--------組込み関数
-//subrを環境に登録する。
+//--------builtin functions------------
+//define subr
 void defsubr(char *symname, int (*func)(int))
 {
     bindfunc(symname, SUBR, func);
 }
 
-//fsubr(引数を評価しない組込関数）の登録。
+//define fsubr
 void deffsubr(char *symname, int (*func)(int))
 {
     bindfunc(symname, FSUBR, func);
@@ -1126,11 +1126,11 @@ void initsubr(void)
     defsubr("apply", f_apply);
     defsubr("print", f_print);
     defsubr("prin1", f_prin1);
-    defsubr("=", f_numeqp);
+    //defsubr("=", f_numeqp);
     defsubr("greaterp", f_greater);
-    defsubr(">=", f_eqgreater);
+    //defsubr(">=", f_eqgreater);
     defsubr("smallerp", f_smaller);
-    defsubr("<=", f_eqsmaller);
+    //defsubr("<=", f_eqsmaller);
     defsubr("zerop", f_zerop);
     defsubr("onep", f_onep);
     defsubr("numberp", f_numberp);
@@ -1150,7 +1150,7 @@ int f_plus(int arglist)
 {
     int arg, res;
 
-    checkarg(NUMLIST_TEST, "+", arglist);
+    checkarg(NUMLIST_TEST, "plus", arglist);
     res = 0;
     while (!(IS_NIL(arglist))) {
 	arg = GET_NUMBER(car(arglist));
@@ -1182,7 +1182,7 @@ int f_minus(int arglist)
 {
     int arg, res;
 
-    checkarg(NUMLIST_TEST, "-", arglist);
+    checkarg(NUMLIST_TEST, "minus", arglist);
     res = GET_NUMBER(car(arglist));
     arglist = cdr(arglist);
     while (!(IS_NIL(arglist))) {
@@ -1197,7 +1197,7 @@ int f_mult(int arglist)
 {
     int arg, res;
 
-    checkarg(NUMLIST_TEST, "*", arglist);
+    checkarg(NUMLIST_TEST, "times", arglist);
     res = GET_NUMBER(car(arglist));
     arglist = cdr(arglist);
     while (!(IS_NIL(arglist))) {
