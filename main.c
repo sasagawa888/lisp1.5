@@ -927,7 +927,7 @@ int macrop(int addr)
 }
 
 
-//-------エラー処理------
+//-------error------
 void error(int errnum, char *fun, int arg)
 {
     switch (errnum) {
@@ -1147,7 +1147,7 @@ void initsubr(void)
     deffsubr("lambda", f_lambda);
     deffsubr("macro", f_defmacro);
     deffsubr("if", f_if);
-    deffsubr("begin", f_begin);
+    deffsubr("begin", f_progn);
     deffsubr("cond", f_cond);
 
     int addr, addr1, res;
@@ -1590,12 +1590,12 @@ int f_cond(int arglist)
     arg3 = cdr(arg1);
 
     if (!(nullp(eval(arg2))))
-	return (f_begin(arg3));
+	return (f_progn(arg3));
     else
 	return (f_cond(cdr(arglist)));
 }
 
-int f_begin(int arglist)
+int f_progn(int arglist)
 {
     int res;
 
