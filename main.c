@@ -439,6 +439,19 @@ int makesym(char *name)
 }
 
 
+int makefunc(int addr)
+{
+    int val;
+
+    val = freshcell();
+    SET_TAG(val, FUNC);
+    SET_BIND(val, addr);
+    SET_CDR(val, 0);
+    return(val);
+}
+
+
+
 // Stack. Used to save the environment pointer (EP).
 void push(int pt)
 {
@@ -1138,6 +1151,7 @@ void initsubr(void)
     defsubr("listp", f_listp);
     deffsubr("setq", f_setq);
     deffsubr("defun", f_defun);
+    deffsubr("lambda", f_lambda);
     deffsubr("macro", f_defmacro);
     deffsubr("if", f_if);
     deffsubr("begin", f_begin);
@@ -1508,7 +1522,7 @@ int f_eval(int arglist)
 int f_apply(int arglist)
 {
     checkarg(LEN2_TEST, "apply", arglist);
-    checkarg(SYMBOL_TEST, "apply", car(arglist));
+    //checkarg(SYMBOL_TEST, "apply", car(arglist));
     checkarg(LIST_TEST, "apply", cadr(arglist));
     int arg1, arg2;
 
@@ -1543,6 +1557,15 @@ int f_defun(int arglist)
     arg2 = cdr(arglist);
     bindfunc1(GET_NAME(arg1), arg2);
     return (T);
+}
+
+int f_lambda(int arglist)
+{
+
+    checkarg(LEN2_TEST, "lambda", arglist);
+    checkarg(LIST_TEST, "lambda", car(arglist));
+    checkarg(LIST_TEST, "lambda", cdr(arglist));
+    return(makefunc(arglist));
 }
 
 int f_defmacro(int arglist)
