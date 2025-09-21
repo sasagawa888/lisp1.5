@@ -1,7 +1,5 @@
-/* MonoLis (minimam Lisp interpreter)
-written by kenichi sasagawa 2016/3
-ver 0.02
-special thanks to Tsuyoshi Uema
+/* Lisp1.5
+written by kenichi sasagawa 2025/9~
 */ 
 
 #define HEAPSIZE 10000000
@@ -215,14 +213,11 @@ int f_defmacro(int arglist);
 int f_lambda(int arglist);
 int f_if(int addr);
 int f_cond(int addr);
-int f_numeqp(int addr);
 int f_numberp(int addr);
 int f_symbolp(int addr);
 int f_listp(int addr);
 int f_greater(int addr);
-int f_eqgreater(int addr);
 int f_smaller(int addr);
-int f_eqsmaller(int addr);
 int f_onep(int addr);
 int f_zerop(int addr);
 int f_gbc(int addr);

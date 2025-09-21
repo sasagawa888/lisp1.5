@@ -1133,11 +1133,8 @@ void initsubr(void)
     defsubr("apply", f_apply);
     defsubr("print", f_print);
     defsubr("prin1", f_prin1);
-    //defsubr("=", f_numeqp);
     defsubr("greaterp", f_greater);
-    //defsubr(">=", f_eqgreater);
     defsubr("smallerp", f_smaller);
-    //defsubr("<=", f_eqsmaller);
     defsubr("zerop", f_zerop);
     defsubr("onep", f_onep);
     defsubr("numberp", f_numberp);
@@ -1351,20 +1348,6 @@ int f_append(int arglist)
     return (append(car(arglist), cadr(arglist)));
 }
 
-int f_numeqp(int arglist)
-{
-    int num1, num2;
-
-    checkarg(LEN2_TEST, "=", arglist);
-    checkarg(NUMLIST_TEST, "=", arglist);
-    num1 = GET_NUMBER(car(arglist));
-    num2 = GET_NUMBER(cadr(arglist));
-
-    if (num1 == num2)
-	return (T);
-    else
-	return (NIL);
-}
 
 int f_symbolp(int arglist)
 {
@@ -1434,21 +1417,6 @@ int f_smaller(int arglist)
 	return (NIL);
 }
 
-int f_eqsmaller(int arglist)
-{
-    int num1, num2;
-
-    checkarg(LEN2_TEST, "<=", arglist);
-    checkarg(NUMLIST_TEST, "<=", arglist);
-    num1 = GET_NUMBER(car(arglist));
-    num2 = GET_NUMBER(cadr(arglist));
-
-    if (num1 <= num2)
-	return (T);
-    else
-	return (NIL);
-}
-
 int f_greater(int arglist)
 {
     int num1, num2;
@@ -1464,21 +1432,6 @@ int f_greater(int arglist)
 	return (NIL);
 }
 
-
-int f_eqgreater(int arglist)
-{
-    int num1, num2;
-
-    checkarg(LEN2_TEST, ">=", arglist);
-    checkarg(NUMLIST_TEST, ">=", arglist);
-    num1 = GET_NUMBER(car(arglist));
-    num2 = GET_NUMBER(cadr(arglist));
-
-    if (num1 >= num2)
-	return (T);
-    else
-	return (NIL);
-}
 
 int f_oblist(int arglist)
 {
