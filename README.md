@@ -27,8 +27,9 @@ Exit the interpreter by typing:
 functions
 
 ```
-> (oblist)
-(nil t plus minus times div quit hdmp car cdr cons list append eq null atom oblist gbc read eval apply print = > >= < <= numberp symbolp listp setq defun defmacro if begin cond)
+LISP 1.5
+> oblist
+(nil t plus minus times quotient add1 sub1 quit hdmp car cdr cons list length append eq null atom oblist gbc read eval apply print prin1 greaterp smallerp zerop onep numberp symbolp listp assoc set quote setq defun lambda macro if begin cond)
 > 
 
 ```

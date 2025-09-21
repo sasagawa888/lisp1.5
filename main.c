@@ -1126,7 +1126,6 @@ void initsubr(void)
     defsubr("eq", f_eq);
     defsubr("null", f_nullp);
     defsubr("atom", f_atomp);
-    defsubr("oblist", f_oblist);
     defsubr("gbc", f_gbc);
     defsubr("read", f_read);
     defsubr("eval", f_eval);
@@ -1150,6 +1149,16 @@ void initsubr(void)
     deffsubr("if", f_if);
     deffsubr("begin", f_begin);
     deffsubr("cond", f_cond);
+
+    int addr, addr1, res;
+    res = NIL;
+    addr = ep;
+    while (!(nullp(addr))) {
+	addr1 = caar(addr);
+	res = cons(addr1, res);
+	addr = cdr(addr);
+    }
+    bindsym(makesym("oblist"),res);
 }
 
 //--subr----
@@ -1432,21 +1441,6 @@ int f_greater(int arglist)
 	return (NIL);
 }
 
-
-int f_oblist(int arglist)
-{
-    int addr, addr1, res;
-
-    checkarg(LEN0_TEST, "oblist", arglist);
-    res = NIL;
-    addr = ep;
-    while (!(nullp(addr))) {
-	addr1 = caar(addr);
-	res = cons(addr1, res);
-	addr = cdr(addr);
-    }
-    return (res);
-}
 
 int f_gbc(int arglist)
 {

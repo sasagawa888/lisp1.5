@@ -207,7 +207,6 @@ int f_eq(int addr);
 int f_set(int addr);
 int f_quote(int addr);
 int f_setq(int addr);
-int f_oblist(int addr);
 int f_defun(int addr);
 int f_defmacro(int arglist);
 int f_lambda(int arglist);
