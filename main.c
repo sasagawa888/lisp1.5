@@ -1121,6 +1121,7 @@ void initsubr(void)
     defsubr("cdr", f_cdr);
     defsubr("cons", f_cons);
     defsubr("list", f_list);
+    defsubr("length", f_length);
     defsubr("append", f_append);
     defsubr("eq", f_eq);
     defsubr("null", f_nullp);
