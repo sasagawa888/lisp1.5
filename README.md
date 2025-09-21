@@ -8,7 +8,6 @@ It is based on a small C Lisp interpreter and aims to provide a Lisp 1.5-like ex
 Compile and install using:
 
 ```bash
-make
 sudo make install
 ```
 

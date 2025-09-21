@@ -1142,6 +1142,8 @@ void initsubr(void)
     defsubr("listp", f_listp);
     defsubr("assoc", f_assoc);
     defsubr("set", f_set);
+    defsubr("not", f_not);
+
     deffsubr("quote", f_quote);
     deffsubr("setq", f_setq);
     deffsubr("defun", f_defun);
@@ -1505,6 +1507,17 @@ int f_set(int arglist)
     return (T);
 }
 
+int f_not(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST, "set", arglist);
+
+    arg1 = car(arglist);
+    if(arg1 == NIL)
+        return(T);
+    else 
+        return(NIL);
+}
 
 
 //--FSUBR-----------
