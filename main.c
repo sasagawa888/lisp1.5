@@ -1556,10 +1556,10 @@ int f_macro(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN3_TEST, "defmacro", arglist);
-    checkarg(SYMBOL_TEST, "defmacro", car(arglist));
-    checkarg(LIST_TEST, "defmacro", cadr(arglist));
-    checkarg(LIST_TEST, "defmacro", caddr(arglist));
+    checkarg(LEN3_TEST, "macro", arglist);
+    checkarg(SYMBOL_TEST, "macro", car(arglist));
+    checkarg(LIST_TEST, "macro", cadr(arglist));
+    checkarg(LIST_TEST, "macro", caddr(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
     bindmacro(GET_NAME(arg1), arg2);
