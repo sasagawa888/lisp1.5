@@ -223,6 +223,7 @@ int f_eval(int addr);
 int f_apply(int addr);
 int f_read(int addr);
 int f_print(int addr);
+int f_prin1(int addr);
 int f_begin(int addr);
 
 

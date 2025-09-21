@@ -1124,6 +1124,7 @@ void initsubr(void)
     defsubr("eval", f_eval);
     defsubr("apply", f_apply);
     defsubr("print", f_print);
+    defsubr("prin1", f_prin1);
     defsubr("=", f_numeqp);
     defsubr("greaterp", f_greater);
     defsubr(">=", f_eqgreater);
@@ -1472,6 +1473,12 @@ int f_print(int arglist)
     return (T);
 }
 
+int f_prin1(int arglist)
+{
+    checkarg(LEN1_TEST, "prin1", arglist);
+    print(car(arglist));
+    return (T);
+}
 
 int f_eval(int arglist)
 {
