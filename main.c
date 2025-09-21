@@ -1107,7 +1107,7 @@ void initsubr(void)
     defsubr("plus", f_plus);
     defsubr("minus", f_minus);
     defsubr("times", f_mult);
-    defsubr("div", f_div);
+    defsubr("quotient", f_quotient);
     defsubr("quit", f_quit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
@@ -1125,10 +1125,12 @@ void initsubr(void)
     defsubr("apply", f_apply);
     defsubr("print", f_print);
     defsubr("=", f_numeqp);
-    defsubr(">", f_greater);
+    defsubr("greaterp", f_greater);
     defsubr(">=", f_eqgreater);
-    defsubr("<", f_smaller);
+    defsubr("smallerp", f_smaller);
     defsubr("<=", f_eqsmaller);
+    defsubr("zerop", f_zerop);
+    defsubr("onep", f_onep);
     defsubr("numberp", f_numberp);
     defsubr("symbolp", f_symbolp);
     defsubr("listp", f_listp);
@@ -1186,11 +1188,11 @@ int f_mult(int arglist)
     return (makenum(res));
 }
 
-int f_div(int arglist)
+int f_quotient(int arglist)
 {
     int arg, res;
 
-    checkarg(NUMLIST_TEST, "/", arglist);
+    checkarg(NUMLIST_TEST, "quotient", arglist);
     res = GET_NUMBER(car(arglist));
     arglist = cdr(arglist);
     while (!(IS_NIL(arglist))) {
@@ -1344,6 +1346,35 @@ int f_listp(int arglist)
     else
 	return (NIL);
 }
+
+int f_onep(int arglist)
+{
+    int num1;
+
+    checkarg(LEN1_TEST, "onep", arglist);
+    checkarg(NUMLIST_TEST, "onep", arglist);
+    num1 = GET_NUMBER(car(arglist));
+
+    if (num1 == 1)
+	return (T);
+    else
+	return (NIL);
+}
+
+int f_zerop(int arglist)
+{
+    int num1;
+
+    checkarg(LEN1_TEST, "zerop", arglist);
+    checkarg(NUMLIST_TEST, "zerop", arglist);
+    num1 = GET_NUMBER(car(arglist));
+
+    if (num1 == 0)
+	return (T);
+    else
+	return (NIL);
+}
+
 
 int f_smaller(int arglist)
 {
