@@ -734,13 +734,13 @@ int eval(int addr)
 	if (numberp(car(addr)))
 	    error(ARG_SYM_ERR, "eval", addr);
 	if (subrp(car(addr)))
-	    return (apply(car(addr), evlis(cdr(addr))));
+	    return (apply(eval(car(addr)), evlis(cdr(addr))));
 	if (fsubrp(car(addr)))
-	    return (apply(car(addr), cdr(addr)));
+	    return (apply(eval(car(addr)), cdr(addr)));
 	if (functionp(car(addr)))
-	    return (apply(car(addr), evlis(cdr(addr))));
+	    return (apply(eval(car(addr)), evlis(cdr(addr))));
 	if (macrop(car(addr)))
-	    return (apply(car(addr), cdr(addr)));
+	    return (apply(eval(car(addr)), cdr(addr)));
 
     }
     error(CANT_FIND_ERR, "eval", addr);
@@ -749,21 +749,17 @@ int eval(int addr)
 
 int apply(int func, int args)
 {
-    int symaddr, varlist, body, res, macrofunc;
+    int varlist, body, res, macrofunc;
 
-    symaddr = findsym(func);
     res = NIL;
-    if (symaddr == -1)
-	error(CANT_FIND_ERR, "apply", func);
-    else {
-	switch (GET_TAG(symaddr)) {
+	switch (GET_TAG(func)) {
 	case SUBR:
-	    return ((GET_SUBR(symaddr)) (args));
+	    return ((GET_SUBR(func)) (args));
 	case FSUBR:
-	    return ((GET_SUBR(symaddr)) (args));
+	    return ((GET_SUBR(func)) (args));
 	case FUNC:{
-		varlist = car(GET_BIND(symaddr));
-		body = cdr(GET_BIND(symaddr));
+		varlist = car(GET_BIND(func));
+		body = cdr(GET_BIND(func));
 		bindarg(varlist, args);
 		while (!(IS_NIL(body))) {
 		    res = eval(car(body));
@@ -773,7 +769,7 @@ int apply(int func, int args)
 		return (res);
 	    }
 	case MACRO:{
-		macrofunc = GET_BIND(symaddr);
+		macrofunc = GET_BIND(func);
 		varlist = car(GET_BIND(macrofunc));
 		body = cdr(GET_BIND(macrofunc));
 		bindarg(varlist, args);
@@ -786,9 +782,8 @@ int apply(int func, int args)
 		return (res);
 	    }
 	default:
-	    error(ILLEGAL_OBJ_ERR, "apply", symaddr);
+	    error(ILLEGAL_OBJ_ERR, "apply", func);
 	}
-    }
     return (0);
 }
 
