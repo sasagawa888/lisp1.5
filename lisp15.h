@@ -34,7 +34,7 @@ typedef struct cell {
 } cell;
 
 
-typedef enum toktype {LPAREN,RPAREN,QUOTE,DOT,BACKQUOTE,COMMA,ATMARK,NUMBER,SYMBOL,OTHER} toktype;
+typedef enum toktype {LPAREN,RPAREN,QUOTE,DOT,BACKQUOTE,COMMA,ATMARK,INTEGER,FLOAT,SYMBOL,OTHER} toktype;
 typedef enum backtrack {GO,BACK} backtrack;
 
 typedef struct token {
@@ -65,6 +65,7 @@ typedef struct token {
 #define SET_SUBR(addr,x)	heap[addr].val.subr = x
 #define IS_SYMBOL(addr)		heap[addr].tag == SYM
 #define IS_NUMBER(addr)		heap[addr].tag == NUM
+#define IS_FLT(addr)		heap[addr].tag == FLTN
 #define IS_LIST(addr)		heap[addr].tag == LIS
 #define IS_NIL(addr)        (addr == 0 || addr == 1)
 #define IS_SUBR(addr)		heap[addr].tag == SUBR
@@ -159,7 +160,8 @@ int makenum(int num);
 int makesym(char *name);
 int makefunc(int addr);
 void gettoken(void);
-int numbertoken(char buf[]);
+int inttoken(char buf[]);
+int flttoken(char buf[]);
 int symboltoken(char buf[]);
 int issymch(char c);
 int read(void);

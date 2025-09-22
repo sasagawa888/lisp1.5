@@ -585,8 +585,12 @@ void gettoken(void)
 
 	    stok.buf[pos] = NUL;
 	    stok.ch = c;
-	    if (numbertoken(stok.buf)) {
-		stok.type = NUMBER;
+	    if (inttoken(stok.buf)) {
+		stok.type = INTEGER;
+		break;
+	    }
+        if (flttoken(stok.buf)) {
+		stok.type = FLOAT;
 		break;
 	    }
 	    if (symboltoken(stok.buf)) {
@@ -598,7 +602,7 @@ void gettoken(void)
     }
 }
 
-int numbertoken(char buf[])
+int inttoken(char buf[])
 {
     int i;
     char c;
@@ -622,6 +626,58 @@ int numbertoken(char buf[])
     }
     return (1);
 }
+
+int flttoken(char buf[])
+{
+    int i;
+    char c;
+
+    if (((buf[0] == '+') || (buf[0] == '-'))) {
+	if (buf[1] == NUL)
+	    return (0);		// case {+,-} => symbol
+	i = 1;
+	while ((c = buf[i]) != NUL)
+	    if (isdigit(c))
+		i++;		// case {+123..., -123...}
+	    else
+		return (0);
+    } else {
+	i = 0;			// {1234...}
+	while ((c = buf[i]) != NUL)
+	    if (isdigit(c))
+		i++;
+	    else if(c == '.')
+            goto dot;
+		else if(c == 'e' || c == 'E')
+            goto exp;
+        else 
+            return(0);
+    }
+    return (0);
+
+    dot:
+    i++;
+    while ((c = buf[i]) != NUL){
+	    if (isdigit(c))
+		i++;
+		else if(c == 'e' || c == 'E')
+            goto exp;
+        else 
+            return(0);
+    }
+    return (1);
+
+    exp:
+    i++;
+    while ((c = buf[i]) != NUL){
+	    if (isdigit(c))
+		i++;
+        else 
+            return(0);
+    }
+    return (1);
+}
+
 
 int symboltoken(char buf[])
 {
@@ -664,8 +720,10 @@ int read(void)
 {
     gettoken();
     switch (stok.type) {
-    case NUMBER:
+    case INTEGER:
 	return (makeint(atoi(stok.buf)));
+    case FLOAT:
+	return (makeflt(atof(stok.buf)));
     case SYMBOL:
 	return (makesym(stok.buf));
     case QUOTE:
@@ -719,8 +777,8 @@ void print(int addr)
         return;
     }
     switch (GET_TAG(addr)) {
-    case NUM:
-	printf("%d", GET_INT(addr));
+    case FLTN:
+	printf("%g", GET_FLT(addr));
 	break;
     case SYM:
 	printf("%s", GET_NAME(addr));
@@ -772,9 +830,7 @@ int eval(int addr)
     int res;
 
     if (atomp(addr)) {
-    if (integerp(addr))
-        return (addr);
-	else if (numberp(addr))
+	if (numberp(addr))
 	    return (addr);
 	if (symbolp(addr)) {
 	    res = findsym(addr);
@@ -886,7 +942,7 @@ int atomp(int addr)
 {
     if(integerp(addr))
     return(1);
-    if ((IS_NUMBER(addr)) || (IS_SYMBOL(addr)))
+    if ((IS_FLT(addr)) || (IS_SYMBOL(addr)))
 	return (1);
     else
 	return (0);
@@ -894,7 +950,9 @@ int atomp(int addr)
 
 int numberp(int addr)
 {
-    if (IS_NUMBER(addr))
+    if(integerp(addr))
+    return(1);
+    else if (IS_FLT(addr))
 	return (1);
     else
 	return (0);
