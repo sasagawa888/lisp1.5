@@ -11,7 +11,10 @@ written by kenichi sasagawa 2025/9~
 #define T 6
 #define HASHTBSIZE 107
 
-typedef enum tag {EMP,NUM,SYM,LIS,SUBR,FSUBR,FUNC,MACRO} tag;
+#define INT_FLAG    1073741824 //#b1000000000000000000000000000000
+#define INT_MASK    1073741823 //#b0111111111111111111111111111111
+
+typedef enum tag {EMP,NUM,INTN,FLTN,SYM,LIS,SUBR,FSUBR,FUNC,MACRO} tag;
 typedef enum flag {FRE,USE} flag;
 
 
@@ -21,8 +24,10 @@ typedef struct cell {
 	char *name;
 	union{
     	int num;
+		int intnum;
     	int bind;
 		int ( *subr) ();
+		double fltnum;
     } val;
     int car;
     int cdr;
@@ -43,6 +48,8 @@ typedef struct token {
 #define GET_CAR(addr)		heap[addr].car
 #define GET_CDR(addr)		heap[addr].cdr
 #define GET_NUMBER(addr)	heap[addr].val.num
+#define GET_INT(addr)		get_int(addr)
+#define GET_FLT(addr)		heap[addr].val.fltnum
 #define GET_NAME(addr)		heap[addr].name
 #define GET_TAG(addr)		heap[addr].tag
 #define GET_BIND(addr)		heap[addr].val.bind
@@ -52,6 +59,7 @@ typedef struct token {
 #define SET_CAR(addr,x)		heap[addr].car = x
 #define SET_CDR(addr,x)		heap[addr].cdr = x
 #define SET_NUMBER(addr,x)	heap[addr].val.num = x
+#define SET_FLT(addr,x)		heap[addr].val.fltnum = x
 #define	SET_BIND(addr,x)	heap[addr].val.bind = x
 #define SET_NAME(addr,x)	heap[addr].name = (char *)malloc(SYMSIZE); strcpy(heap[addr].name,x);
 #define SET_SUBR(addr,x)	heap[addr].val.subr = x
@@ -144,6 +152,9 @@ int assoc(int sym, int lis);
 int length(int addr);
 int list(int addr);
 int append(int x, int y);
+int makeint(int x);
+int get_int(int x);
+int integerp(int addr);
 int makenum(int num);
 int makesym(char *name);
 int makefunc(int addr);

@@ -413,8 +413,36 @@ int append(int x, int y)
     else
 	return (cons(car(x), append(cdr(x), y)));
 }
+//-----------data type--------------------
+int integerp(int addr)
+{
+    if (addr >= INT_FLAG)
+	return (1);
+    else if (addr < 0)
+	return (1);
+    else
+	return (0);
+}
+
 
 //----------------------------------------
+int get_int(int addr)
+{
+    if (addr >= 0)
+	return (INT_MASK & addr);
+    else
+	return (addr);
+}
+
+int makeint(int num)
+{
+    if (num >= 0)
+	return (INT_FLAG | num);
+    else
+	return (num);
+}
+
+
 
 int makenum(int num)
 {
@@ -425,6 +453,17 @@ int makenum(int num)
     SET_NUMBER(addr, num);
     return (addr);
 }
+
+int makeflt(double floatn)
+{
+    int addr;
+
+    addr = freshcell();
+    SET_TAG(addr, FLTN);
+    SET_FLT(addr, floatn);
+    return (addr);
+}
+
 
 
 int makesym(char *name)
