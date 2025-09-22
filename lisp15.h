@@ -23,7 +23,6 @@ typedef struct cell {
     flag flag;
 	char *name;
 	union{
-    	int num;
 		int intnum;
     	int bind;
 		int ( *subr) ();
@@ -47,9 +46,8 @@ typedef struct token {
 
 #define GET_CAR(addr)		heap[addr].car
 #define GET_CDR(addr)		heap[addr].cdr
-#define GET_NUMBER(addr)	heap[addr].val.num
 #define GET_INT(addr)		get_int(addr)
-#define GET_FLT(addr)		heap[addr].val.fltnum
+#define GET_FLT(addr)		((addr < HEAPSIZE && addr >0) ? heap[addr].val.fltnum: NIL)
 #define GET_NAME(addr)		heap[addr].name
 #define GET_TAG(addr)		heap[addr].tag
 #define GET_BIND(addr)		heap[addr].val.bind
@@ -58,7 +56,6 @@ typedef struct token {
 #define SET_TAG(addr,x)		heap[addr].tag = x
 #define SET_CAR(addr,x)		heap[addr].car = x
 #define SET_CDR(addr,x)		heap[addr].cdr = x
-#define SET_NUMBER(addr,x)	heap[addr].val.num = x
 #define SET_FLT(addr,x)		heap[addr].val.fltnum = x
 #define	SET_BIND(addr,x)	heap[addr].val.bind = x
 #define SET_NAME(addr,x)	heap[addr].name = (char *)malloc(SYMSIZE); strcpy(heap[addr].name,x);
@@ -99,6 +96,7 @@ int ap; //arglist pointer
 //-------error code---
 #define CANT_FIND_ERR	1
 #define ARG_SYM_ERR		2
+#define ARG_INT_ERR		12
 #define ARG_NUM_ERR		3
 #define ARG_LIS_ERR		4
 #define ARG_LEN0_ERR	5
@@ -110,6 +108,7 @@ int ap; //arglist pointer
 #define ILLEGAL_OBJ_ERR 11
 
 //-------arg check code--
+#define INTLIST_TEST    0
 #define NUMLIST_TEST	1
 #define SYMBOL_TEST		2
 #define NUMBER_TEST		3
@@ -196,6 +195,7 @@ void argpush(int addr);
 void argpop(void);
 void error(int errnum, char *fun, int arg);
 void checkarg(int test, char *fun, int arg);
+int isintlis(int arg);
 int isnumlis(int arg);
 
 //---subr-------
@@ -204,8 +204,11 @@ int f_difference(int addr);
 int f_minus(int addr);
 int	f_times(int addr);
 int f_quotient(int addr);
+int f_divide(int addr);
 int f_add1(int addr);
 int f_sub1(int addr);
+int f_max(int addr);
+int f_min(int addr);
 int f_quit(int addr);
 int f_heapdump(int addr);
 int f_car(int addr);
