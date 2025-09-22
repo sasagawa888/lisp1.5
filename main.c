@@ -183,6 +183,9 @@ void cellprint(int addr)
     case NUM:
 	printf("NUM    ");
 	break;
+    case FLTN:
+	printf("FLT    ");
+	break;
     case SYM:
 	printf("SYM    ");
 	break;
@@ -662,7 +665,7 @@ int read(void)
     gettoken();
     switch (stok.type) {
     case NUMBER:
-	return (makenum(atoi(stok.buf)));
+	return (makeint(atoi(stok.buf)));
     case SYMBOL:
 	return (makesym(stok.buf));
     case QUOTE:
@@ -711,9 +714,13 @@ int readlist(void)
 //-----print------------------
 void print(int addr)
 {
+    if(integerp(addr)){
+        printf("%d", GET_INT(addr));
+        return;
+    }
     switch (GET_TAG(addr)) {
     case NUM:
-	printf("%d", GET_NUMBER(addr));
+	printf("%d", GET_INT(addr));
 	break;
     case SYM:
 	printf("%s", GET_NAME(addr));
@@ -765,7 +772,9 @@ int eval(int addr)
     int res;
 
     if (atomp(addr)) {
-	if (numberp(addr))
+    if (integerp(addr))
+        return (addr);
+	else if (numberp(addr))
 	    return (addr);
 	if (symbolp(addr)) {
 	    res = findsym(addr);
@@ -875,6 +884,8 @@ int evlis(int addr)
 
 int atomp(int addr)
 {
+    if(integerp(addr))
+    return(1);
     if ((IS_NUMBER(addr)) || (IS_SYMBOL(addr)))
 	return (1);
     else
@@ -919,7 +930,7 @@ int eqp(int addr1, int addr2)
     if (addr1 == addr2)
 	return (1);
     else if ((numberp(addr1)) && (numberp(addr2))
-	     && ((GET_NUMBER(addr1)) == (GET_NUMBER(addr2))))
+	     && ((GET_INT(addr1)) == (GET_INT(addr2))))
 	return (1);
     else if ((symbolp(addr1)) && (symbolp(addr2))
 	     && (SAME_NAME(addr1, addr2)))
@@ -1093,7 +1104,7 @@ void checkarg(int test, char *fun, int arg)
 int isnumlis(int arg)
 {
     while (!(IS_NIL(arg)))
-	if (numberp(car(arg)))
+	if (integerp(car(arg)))
 	    arg = cdr(arg);
 	else
 	    return (0);
@@ -1221,11 +1232,11 @@ int f_plus(int arglist)
     checkarg(NUMLIST_TEST, "plus", arglist);
     res = 0;
     while (!(IS_NIL(arglist))) {
-	arg = GET_NUMBER(car(arglist));
+	arg = GET_INT(car(arglist));
 	arglist = cdr(arglist);
 	res = res + arg;
     }
-    return (makenum(res));
+    return (makeint(res));
 }
 
 int f_add1(int arglist)
@@ -1233,8 +1244,8 @@ int f_add1(int arglist)
     int number1;
 
     checkarg(NUMLIST_TEST, "add1", arglist);
-    number1 = GET_NUMBER(car(arglist));
-    return (makenum(number1+1));
+    number1 = GET_INT(car(arglist));
+    return (makeint(number1+1));
 }
 
 int f_sub1(int arglist)
@@ -1242,8 +1253,8 @@ int f_sub1(int arglist)
     int number1;
 
     checkarg(NUMLIST_TEST, "sub1", arglist);
-    number1 = GET_NUMBER(car(arglist));
-    return (makenum(number1-1));
+    number1 = GET_INT(car(arglist));
+    return (makeint(number1-1));
 }
 
 int f_difference(int arglist)
@@ -1253,7 +1264,7 @@ int f_difference(int arglist)
     checkarg(LEN2_TEST, "difference", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return(makenum(GET_NUMBER(arg1)-GET_NUMBER(arg2)));
+    return(makeint(GET_INT(arg1)-GET_INT(arg2)));
 }
 
 int f_minus(int arglist)
@@ -1263,7 +1274,7 @@ int f_minus(int arglist)
     checkarg(NUMLIST_TEST, "minus", arglist);
     checkarg(LEN1_TEST, "minus", arglist);
     arg1 = car(arglist);
-    return (makenum(GET_NUMBER(arg1)*-1));
+    return (makeint(GET_INT(arg1)*-1));
 }
 
 int f_times(int arglist)
@@ -1271,14 +1282,14 @@ int f_times(int arglist)
     int arg, res;
 
     checkarg(NUMLIST_TEST, "times", arglist);
-    res = GET_NUMBER(car(arglist));
+    res = GET_INT(car(arglist));
     arglist = cdr(arglist);
     while (!(IS_NIL(arglist))) {
-	arg = GET_NUMBER(car(arglist));
+	arg = GET_INT(car(arglist));
 	arglist = cdr(arglist);
 	res = res * arg;
     }
-    return (makenum(res));
+    return (makeint(res));
 }
 
 int f_quotient(int arglist)
@@ -1286,14 +1297,14 @@ int f_quotient(int arglist)
     int arg, res;
 
     checkarg(NUMLIST_TEST, "quotient", arglist);
-    res = GET_NUMBER(car(arglist));
+    res = GET_INT(car(arglist));
     arglist = cdr(arglist);
     while (!(IS_NIL(arglist))) {
-	arg = GET_NUMBER(car(arglist));
+	arg = GET_INT(car(arglist));
 	arglist = cdr(arglist);
 	res = res / arg;
     }
-    return (makenum(res));
+    return (makeint(res));
 }
 
 int f_quit(int arglist)
@@ -1313,7 +1324,7 @@ int f_heapdump(int arglist)
     int arg1;
 
     checkarg(LEN1_TEST, "hdmp", arglist);
-    arg1 = GET_NUMBER(car(arglist));
+    arg1 = GET_INT(car(arglist));
     heapdump(arg1, arg1 + 10);
     return (T);
 }
@@ -1387,7 +1398,7 @@ int f_length(int arglist)
 {
     checkarg(LEN1_TEST, "length", arglist);
     checkarg(LIST_TEST, "length", car(arglist));
-    return (makenum(length(car(arglist))));
+    return (makeint(length(car(arglist))));
 }
 
 int f_list(int arglist)
@@ -1444,7 +1455,7 @@ int f_onep(int arglist)
 
     checkarg(LEN1_TEST, "onep", arglist);
     checkarg(NUMLIST_TEST, "onep", arglist);
-    num1 = GET_NUMBER(car(arglist));
+    num1 = GET_INT(car(arglist));
 
     if (num1 == 1)
 	return (T);
@@ -1458,7 +1469,7 @@ int f_zerop(int arglist)
 
     checkarg(LEN1_TEST, "zerop", arglist);
     checkarg(NUMLIST_TEST, "zerop", arglist);
-    num1 = GET_NUMBER(car(arglist));
+    num1 = GET_INT(car(arglist));
 
     if (num1 == 0)
 	return (T);
@@ -1473,8 +1484,8 @@ int f_smaller(int arglist)
 
     checkarg(LEN2_TEST, "<", arglist);
     checkarg(NUMLIST_TEST, "<", arglist);
-    num1 = GET_NUMBER(car(arglist));
-    num2 = GET_NUMBER(cadr(arglist));
+    num1 = GET_INT(car(arglist));
+    num2 = GET_INT(cadr(arglist));
 
     if (num1 < num2)
 	return (T);
@@ -1488,8 +1499,8 @@ int f_greater(int arglist)
 
     checkarg(LEN2_TEST, ">", arglist);
     checkarg(NUMLIST_TEST, ">", arglist);
-    num1 = GET_NUMBER(car(arglist));
-    num2 = GET_NUMBER(cadr(arglist));
+    num1 = GET_INT(car(arglist));
+    num2 = GET_INT(cadr(arglist));
 
     if (num1 > num2)
 	return (T);
