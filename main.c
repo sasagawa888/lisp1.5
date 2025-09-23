@@ -1723,6 +1723,7 @@ int f_append(int arglist)
 
 int f_symbolp(int arglist)
 {
+    checkarg(LEN1_TEST, "symbolp", arglist);
     if (symbolp(car(arglist)))
 	return (T);
     else
@@ -1731,6 +1732,7 @@ int f_symbolp(int arglist)
 
 int f_numberp(int arglist)
 {
+    checkarg(LEN1_TEST, "numberp", arglist);
     if (numberp(car(arglist)))
 	return (T);
     else
@@ -1739,6 +1741,7 @@ int f_numberp(int arglist)
 
 int f_fixp(int arglist)
 {
+    checkarg(LEN1_TEST, "fixp", arglist);
     if (fixp(car(arglist)))
 	return (T);
     else
