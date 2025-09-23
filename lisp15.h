@@ -228,6 +228,9 @@ int f_append(int addr);
 int f_nconc(int addr);
 int f_rplaca(int addr);
 int f_rplacd(int addr);
+int f_maplist(int addr);
+int f_mapcon(int addr);
+int f_map(int addr);
 int f_nullp(int addr);
 int f_atomp(int addr);
 int f_eq(int addr);
@@ -263,5 +266,6 @@ int f_progn(int addr);
 
 int quasi_transfer1(int x);
 int quasi_transfer2(int x, int n);
+int list1(int x);
 int list2(int x, int y);
 int list3(int x, int y, int z);

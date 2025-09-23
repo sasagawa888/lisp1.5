@@ -601,6 +601,31 @@ int nconc(int x, int y)
     return(x);
 }
 
+int maplist(int lis, int fun)
+{
+    if(nullp(lis))
+        return(NIL);
+    else 
+        return(cons(apply(fun,list1(car(lis))),maplist(cdr(lis),fun)));
+}
+
+int mapcon(int lis, int fun)
+{
+    if(nullp(lis))
+        return(NIL);
+    else 
+        return(nconc(list1(apply(fun,list1(car(lis)))),mapcon(cdr(lis),fun)));
+}
+
+int map(int lis, int fun)
+{
+    while(!nullp(lis)){
+        apply(fun,list1(car(lis)));
+        lis = cdr(lis);
+    }
+    return(NIL);
+}
+
 //----------------------------------------
 int get_int(int addr)
 {
@@ -1333,6 +1358,9 @@ void initsubr(void)
     defsubr("nconc", f_nconc);
     defsubr("rplaca", f_rplaca);
     defsubr("rplacd", f_rplacd);
+    defsubr("maplist", f_maplist);
+    defsubr("mapcon", f_mapcon);
+    defsubr("map", f_map);
     defsubr("eq", f_eq);
     defsubr("equal", f_equal);
     defsubr("null", f_nullp);
@@ -2007,7 +2035,6 @@ int f_eval(int arglist)
 int f_apply(int arglist)
 {
     checkarg(LEN2_TEST, "apply", arglist);
-    //checkarg(SYMBOL_TEST, "apply", car(arglist));
     checkarg(LIST_TEST, "apply", cadr(arglist));
     int arg1, arg2;
 
@@ -2015,6 +2042,40 @@ int f_apply(int arglist)
     arg2 = cadr(arglist);
     return (apply(arg1, arg2));
 }
+
+int f_maplist(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST, "maplist", arglist);
+    checkarg(LIST_TEST, "maplist", car(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(maplist(arg1,arg2));
+
+}
+
+int f_mapcon(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST, "mapcon", arglist);
+    checkarg(LIST_TEST, "mapcon", car(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(mapcon(arg1,arg2));
+
+}
+
+int f_map(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST, "map", arglist);
+    checkarg(LIST_TEST, "map", car(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(map(arg1,arg2));
+
+}
+
 
 int f_set(int arglist)
 {
@@ -2189,6 +2250,11 @@ int quasi_transfer1(int x)
 	return (list3
 		(makesym("cons"), quasi_transfer1(car(x)),
 		 quasi_transfer1(cdr(x))));
+}
+
+int list1(int x)
+{
+    return(cons(x,NIL));
 }
 
 int list2(int x, int y)
