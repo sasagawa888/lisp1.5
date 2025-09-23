@@ -240,6 +240,7 @@ int f_lessp(int addr);
 int f_onep(int addr);
 int f_zerop(int addr);
 int f_minusp(int addr);
+int f_fixp(int addr);
 int f_gbc(int addr);
 int f_eval(int addr);
 int f_apply(int addr);

@@ -958,6 +958,15 @@ int numberp(int addr)
 	return (0);
 }
 
+int fixp(int addr)
+{
+    if(integerp(addr))
+    return(1);
+    else
+	return (0);
+}
+
+
 int symbolp(int addr)
 {
     if (IS_SYMBOL(addr))
@@ -1284,6 +1293,7 @@ void initsubr(void)
     defsubr("onep", f_onep);
     defsubr("minusp", f_minusp);
     defsubr("numberp", f_numberp);
+    defsubr("fixp", f_fixp);
     defsubr("symbolp", f_symbolp);
     defsubr("listp", f_listp);
     defsubr("assoc", f_assoc);
@@ -1726,6 +1736,15 @@ int f_numberp(int arglist)
     else
 	return (NIL);
 }
+
+int f_fixp(int arglist)
+{
+    if (fixp(car(arglist)))
+	return (T);
+    else
+	return (NIL);
+}
+
 
 int f_listp(int arglist)
 {
