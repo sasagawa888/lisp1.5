@@ -14,6 +14,8 @@ written by kenichi sasagawa 2025/9~
 #define INT_FLAG    1073741824 //#b1000000000000000000000000000000
 #define INT_MASK    1073741823 //#b0111111111111111111111111111111
 
+#define DEBUG longjmp(buf, 2);
+
 typedef enum tag {EMP,NUM,FLTN,SYM,LIS,SUBR,FSUBR,FUNC,MACRO} tag;
 typedef enum flag {FRE,USE} flag;
 

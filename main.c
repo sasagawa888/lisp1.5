@@ -357,7 +357,9 @@ int integerp(int addr)
 
 int floatp(int addr)
 {   
-    if(IS_FLT(addr))
+    if(addr >= HEAPSIZE || addr <0)
+        return(0);
+    else if(IS_FLT(addr))
         return(1);
     else
         return(0);
@@ -367,6 +369,8 @@ int numberp(int addr)
 {
     if(integerp(addr))
     return(1);
+    if(addr >= HEAPSIZE || addr <0)
+    return(0);
     else if (IS_FLT(addr))
 	return (1);
     else
@@ -384,7 +388,9 @@ int fixp(int addr)
 
 int symbolp(int addr)
 {
-    if (IS_SYMBOL(addr))
+    if(addr >= HEAPSIZE || addr <0)
+    return(0);
+    else if (IS_SYMBOL(addr))
 	return (1);
     else
 	return (0);
@@ -392,7 +398,9 @@ int symbolp(int addr)
 
 int listp(int addr)
 {
-    if (IS_LIST(addr) || IS_NIL(addr))
+    if(addr >= HEAPSIZE || addr <0)
+        return(0);
+    else if (IS_LIST(addr) || IS_NIL(addr))
 	return (1);
     else
 	return (0);
@@ -480,6 +488,8 @@ int macrop(int addr)
 
 int car(int addr)
 {
+    if(addr >= HEAPSIZE || addr < 0)
+        return(NIL);
     return (GET_CAR(addr));
 }
 
@@ -495,6 +505,8 @@ int cdar(int addr)
 
 int cdr(int addr)
 {
+    if(addr >= HEAPSIZE || addr < 0)
+        return(NIL);
     return (GET_CDR(addr));
 }
 
@@ -978,8 +990,8 @@ int eval(int addr)
     } else if (listp(addr)) {
     if (numberp(car(addr)))
 	    error(ARG_SYM_ERR, "eval", addr);
-	else if ((symbolp(car(addr))) && (HAS_NAME(car(addr), "quasi-quote")))
-	    return (eval(quasi_transfer2(cadr(addr), 0)));
+	else if ((symbolp(car(addr))) && (HAS_NAME(car(addr), "QUASI-QUOTE")))
+        return (eval(quasi_transfer2(cadr(addr), 0)));
 	else if (subrp(car(addr)))
 	    return (apply(eval(car(addr)), evlis(cdr(addr))));
 	else if (fsubrp(car(addr)))
@@ -2174,4 +2186,5 @@ int quasi_transfer2(int x, int n)
 	return (list3
 		(makesym("cons"), quasi_transfer2(car(x), n),
 		 quasi_transfer2(cdr(x), n)));
+    
 }
