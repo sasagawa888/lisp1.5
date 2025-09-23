@@ -584,6 +584,23 @@ int append(int x, int y)
 	return (cons(car(x), append(cdr(x), y)));
 }
 
+int last(int x)
+{
+    if(nullp(cdr(x)))
+        return(x);
+    else 
+        return(last(cdr(x)));
+}
+
+int nconc(int x, int y)
+{
+    if(nullp(x))
+        return(y);
+
+    SET_CDR(last(x),y);
+    return(x);
+}
+
 //----------------------------------------
 int get_int(int addr)
 {
@@ -1313,6 +1330,7 @@ void initsubr(void)
     defsubr("reverse", f_reverse);
     defsubr("length", f_length);
     defsubr("append", f_append);
+    defsubr("nconc", f_nconc);
     defsubr("eq", f_eq);
     defsubr("equal", f_equal);
     defsubr("null", f_nullp);
@@ -1805,6 +1823,12 @@ int f_append(int arglist)
     return (append(car(arglist), cadr(arglist)));
 }
 
+int f_nconc(int arglist)
+{
+    checkarg(LEN2_TEST, "nconc", arglist);
+    checkarg(LIST_TEST, "nconc", car(arglist));
+    return (nconc(car(arglist), cadr(arglist)));
+}
 
 int f_symbolp(int arglist)
 {
