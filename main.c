@@ -19,10 +19,12 @@ token stok = { GO, OTHER };
 jmp_buf buf;
 int cell_hash_table[HASHTBSIZE];
 
+FILE *input_stream;
 
 int main(void)
 {
     printf("LISP 1.5\n");
+    input_stream = stdin;
     initcell();
     initsubr();
     int ret = setjmp(buf);
