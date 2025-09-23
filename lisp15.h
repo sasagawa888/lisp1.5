@@ -226,6 +226,8 @@ int f_assoc(int addr);
 int f_member(int addr);
 int f_append(int addr);
 int f_nconc(int addr);
+int f_rplaca(int addr);
+int f_rplacd(int addr);
 int f_nullp(int addr);
 int f_atomp(int addr);
 int f_eq(int addr);

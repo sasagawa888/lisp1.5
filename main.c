@@ -1331,6 +1331,8 @@ void initsubr(void)
     defsubr("length", f_length);
     defsubr("append", f_append);
     defsubr("nconc", f_nconc);
+    defsubr("rplaca", f_rplaca);
+    defsubr("rplacd", f_rplacd);
     defsubr("eq", f_eq);
     defsubr("equal", f_equal);
     defsubr("null", f_nullp);
@@ -1829,6 +1831,29 @@ int f_nconc(int arglist)
     checkarg(LIST_TEST, "nconc", car(arglist));
     return (nconc(car(arglist), cadr(arglist)));
 }
+
+int f_rplaca(int arglist){
+    int arg1,arg2;
+
+    checkarg(LEN2_TEST, "rplaca", arglist);
+    checkarg(LIST_TEST, "rplaca", car(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    SET_CAR(arg1,arg2);
+    return(arg1);
+}
+
+int f_rplacd(int arglist){
+    int arg1,arg2;
+
+    checkarg(LEN2_TEST, "rplacd", arglist);
+    checkarg(LIST_TEST, "rplacd", car(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    SET_CDR(arg1,arg2);
+    return(arg1);
+}
+
 
 int f_symbolp(int arglist)
 {
