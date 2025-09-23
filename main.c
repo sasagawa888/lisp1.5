@@ -1669,6 +1669,8 @@ int f_car(int arglist)
 
     checkarg(LEN1_TEST, "car", arglist);
     arg1 = car(arglist);
+    if(atomp(arg1))
+        error(ARG_LIS_ERR,"car",arg1);
     return (car(arg1));
 }
 
@@ -1678,6 +1680,8 @@ int f_cdr(int arglist)
 
     checkarg(LEN1_TEST, "cdr", arglist);
     arg1 = car(arglist);
+    if(atomp(arg1))
+        error(ARG_LIS_ERR,"cdr",arg1);
     return (cdr(arg1));
 }
 
