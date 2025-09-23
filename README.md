@@ -16,7 +16,7 @@ Usage
 
 Start the interpreter by running:
 ```
-lisp
+lisp punch.lsp
 ```
 Exit the interpreter by typing:
 ```

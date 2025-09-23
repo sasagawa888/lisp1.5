@@ -6,6 +6,9 @@ Start the system from the terminal by running:
 
 ```
 lisp filename
+
+e.g.
+lisp punch.lsp
 ```
 
 This simulates the original LISP 1.5 startup, where the system read punch cards from a deck.
