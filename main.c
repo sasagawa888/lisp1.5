@@ -2186,13 +2186,14 @@ int f_setq(int arglist)
 }
 int f_define(int arglist)
 {
-    int sym,lam;
-
-    while(!nullp(arglist)){
-        sym = car(car(arglist));
-        lam = eval(cadr(car(arglist)));
+    int arg1,sym,lam;
+    checkarg(DEFLIST_TEST,"define",car(arglist));
+    arg1 = car(arglist);
+    while(!nullp(arg1)){
+        sym = car(car(arg1));
+        lam = eval(cadr(car(arg1)));
         bindsym(sym,lam);
-        arglist = cdr(arglist);
+        arg1 = cdr(arg1);
     }
     return(T);
 }
