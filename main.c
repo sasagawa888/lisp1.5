@@ -1282,6 +1282,7 @@ void initsubr(void)
     defsubr("lessp", f_lessp);
     defsubr("zerop", f_zerop);
     defsubr("onep", f_onep);
+    defsubr("minusp", f_minusp);
     defsubr("numberp", f_numberp);
     defsubr("symbolp", f_symbolp);
     defsubr("listp", f_listp);
@@ -1765,6 +1766,22 @@ int f_zerop(int arglist)
     else
 	return (NIL);
 }
+
+
+int f_minusp(int arglist)
+{
+    int arg1;
+
+    checkarg(LEN1_TEST, "minusp", arglist);
+    checkarg(NUMLIST_TEST, "minusp", arglist);
+    arg1 = car(arglist);
+
+    if(lessp(arg1,makeint(0)))
+    return (T);
+    else
+	return (NIL);
+}
+
 
 
 int f_lessp(int arglist)
