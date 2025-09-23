@@ -838,17 +838,17 @@ int eval(int addr)
 		return (res);
 	}
     } else if (listp(addr)) {
-	if ((symbolp(car(addr))) && (HAS_NAME(car(addr), "quasi-quote")))
-	    return (eval(quasi_transfer2(cadr(addr), 0)));
-	if (numberp(car(addr)))
+    if (numberp(car(addr)))
 	    error(ARG_SYM_ERR, "eval", addr);
-	if (subrp(car(addr)))
+	else if ((symbolp(car(addr))) && (HAS_NAME(car(addr), "quasi-quote")))
+	    return (eval(quasi_transfer2(cadr(addr), 0)));
+	else if (subrp(car(addr)))
 	    return (apply(eval(car(addr)), evlis(cdr(addr))));
-	if (fsubrp(car(addr)))
+	else if (fsubrp(car(addr)))
 	    return (apply(eval(car(addr)), cdr(addr)));
-	if (functionp(car(addr)))
+	else if (functionp(car(addr)))
 	    return (apply(eval(car(addr)), evlis(cdr(addr))));
-	if (macrop(car(addr)))
+	else if (macrop(car(addr)))
 	    return (apply(eval(car(addr)), cdr(addr)));
 
     }
@@ -1276,8 +1276,8 @@ void initsubr(void)
     defsubr("apply", f_apply);
     defsubr("print", f_print);
     defsubr("prin1", f_prin1);
-    defsubr("greaterp", f_greater);
-    defsubr("smallerp", f_smaller);
+    defsubr("greaterp", f_greaterp);
+    defsubr("lessp", f_lessp);
     defsubr("zerop", f_zerop);
     defsubr("onep", f_onep);
     defsubr("numberp", f_numberp);
@@ -1315,7 +1315,7 @@ int plus(int x, int y){
             return(makeflt(GET_INT(x)+GET_FLT(y)));
     } else if(floatp(x)){
         if(integerp(y))
-            return(makeflt(GET_INT(x)+GET_FLT(y)));
+            return(makeflt(GET_FLT(x)+GET_INT(y)));
         else if(floatp(y))
             return(makeflt(GET_FLT(x)+GET_FLT(y))); 
             
@@ -1332,7 +1332,7 @@ int difference(int x, int y){
             return(makeflt(GET_INT(x)-GET_FLT(y)));
     } else if(floatp(x)){
         if(integerp(y))
-            return(makeflt(GET_INT(x)-GET_FLT(y)));
+            return(makeflt(GET_FLT(x)-GET_INT(y)));
         else if(floatp(y))
             return(makeflt(GET_FLT(x)-GET_FLT(y))); 
             
@@ -1340,7 +1340,6 @@ int difference(int x, int y){
 
     return(NIL);
 }
-
 
 int times(int x, int y){
     if(integerp(x)){
@@ -1408,13 +1407,24 @@ int greaterp(int x, int y)
     return(NIL);
 }
 
-int smallerp(int x, int y)
+int lessp(int x, int y)
 {
     if(greaterp(y,x))
         return(1);
     else
         return(0);
 }
+
+
+int power(int x, int y)
+{
+    if(y%2==0)
+        return(power(x*x,y/2));
+    else 
+        return(x*power(x,y-1));
+}
+
+
 //---------subr--------------------------
 
 int f_plus(int arglist)
@@ -1530,7 +1540,7 @@ int f_min(int arglist)
     res = car(arglist);
     arglist = cdr(arglist);
     while (!(IS_NIL(arglist))) {
-    if(smallerp(car(arglist),res))
+    if(lessp(car(arglist),res))
     res = car(arglist);
 	arglist = cdr(arglist);
     }
@@ -1561,6 +1571,22 @@ int f_remainder(int arglist)
     arg2 = cadr(arglist);
     return(makeint(GET_INT(arg1)%GET_INT(arg2)));
 }
+
+int f_expt(int arglist)
+{
+    int arg1,arg2;
+
+    checkarg(LEN2_TEST, "expt", arglist);
+    checkarg(INTLIST_TEST, "expt", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    if(GET_INT(arg2))
+        return(makeint(1));
+    else if(GET_INT(arg2)<0)
+        return(makeint(0));
+    return(power(GET_INT(arg1),GET_INT(arg2)));
+}
+
 
 
 
@@ -1735,31 +1761,31 @@ int f_zerop(int arglist)
 }
 
 
-int f_smaller(int arglist)
+int f_lessp(int arglist)
 {
-    int num1, num2;
+    int arg1, arg2;
 
-    checkarg(LEN2_TEST, "<", arglist);
-    checkarg(NUMLIST_TEST, "<", arglist);
-    num1 = GET_INT(car(arglist));
-    num2 = GET_INT(cadr(arglist));
+    checkarg(LEN2_TEST, "lessp", arglist);
+    checkarg(NUMLIST_TEST, "lessp", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
 
-    if (num1 < num2)
+    if (lessp(arg1,arg2))
 	return (T);
     else
 	return (NIL);
 }
 
-int f_greater(int arglist)
+int f_greaterp(int arglist)
 {
-    int num1, num2;
+    int arg1, arg2;
 
-    checkarg(LEN2_TEST, ">", arglist);
-    checkarg(NUMLIST_TEST, ">", arglist);
-    num1 = GET_INT(car(arglist));
-    num2 = GET_INT(cadr(arglist));
+    checkarg(LEN2_TEST, "greaterp", arglist);
+    checkarg(NUMLIST_TEST, "greaterp", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
 
-    if (num1 > num2)
+    if (greaterp(arg1,arg2))
 	return (T);
     else
 	return (NIL);
