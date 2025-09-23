@@ -7,6 +7,8 @@ written by kenichi sasagawa
 #include <ctype.h>
 #include <stdlib.h>
 #include <setjmp.h>
+#include <float.h>
+#include <math.h>
 #include "lisp15.h"
 
 cell heap[HEAPSIZE];
@@ -1734,28 +1736,32 @@ int f_listp(int arglist)
 
 int f_onep(int arglist)
 {
-    int num1;
+    int arg1;
 
     checkarg(LEN1_TEST, "onep", arglist);
     checkarg(NUMLIST_TEST, "onep", arglist);
-    num1 = GET_INT(car(arglist));
+    arg1 = car(arglist);
 
-    if (num1 == 1)
+    if (integerp(arg1) && GET_INT(arg1)==1)
 	return (T);
+    else if(floatp(arg1) && fabs(GET_FLT(arg1)-1.0) < DBL_MIN)
+    return (T);
     else
 	return (NIL);
 }
 
 int f_zerop(int arglist)
 {
-    int num1;
+    int arg1;
 
     checkarg(LEN1_TEST, "zerop", arglist);
     checkarg(NUMLIST_TEST, "zerop", arglist);
-    num1 = GET_INT(car(arglist));
+    arg1 = car(arglist);
 
-    if (num1 == 0)
+    if (integerp(arg1) && GET_INT(arg1)==0)
 	return (T);
+    else if(floatp(arg1) && fabs(GET_FLT(arg1)) < DBL_MIN)
+    return (T);
     else
 	return (NIL);
 }
