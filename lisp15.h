@@ -213,6 +213,7 @@ int f_max(int addr);
 int f_min(int addr);
 int f_recip(int addr);
 int f_remainder(int addr);
+int f_expt(int addr);
 int f_quit(int addr);
 int f_heapdump(int addr);
 int f_car(int addr);

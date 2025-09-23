@@ -1303,6 +1303,7 @@ void initsubr(void)
     defsubr("min", f_min);
     defsubr("recip", f_recip);
     defsubr("remainder", f_remainder);
+    defsubr("expt", f_expt);
     defsubr("quit", f_quit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
@@ -1469,7 +1470,9 @@ int lessp(int x, int y)
 
 int power(int x, int y)
 {
-    if(y%2==0)
+    if(y == 1)
+        return(x);
+    else if(y%2==0)
         return(power(x*x,y/2));
     else 
         return(x*power(x,y-1));
@@ -1631,11 +1634,11 @@ int f_expt(int arglist)
     checkarg(INTLIST_TEST, "expt", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if(GET_INT(arg2))
+    if(GET_INT(arg2) == 0)
         return(makeint(1));
-    else if(GET_INT(arg2)<0)
-        return(makeint(0));
-    return(power(GET_INT(arg1),GET_INT(arg2)));
+    else if(GET_INT(arg1)<0)
+        error(ILLEGAL_OBJ_ERR,"expt",arglist);
+    return(makeint(power(GET_INT(arg1),GET_INT(arg2))));
 }
 
 
