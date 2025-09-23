@@ -1319,6 +1319,8 @@ void initsubr(void)
     deffsubr("if", f_if);
     deffsubr("begin", f_progn);
     deffsubr("cond", f_cond);
+    deffsubr("and", f_and);
+    deffsubr("or", f_or);
 
     int addr, addr1, res;
     res = NIL;
@@ -2050,6 +2052,33 @@ int f_progn(int arglist)
 	arglist = cdr(arglist);
     }
     return (res);
+}
+
+int f_and(int arglist)
+{
+    int res;
+
+    res = NIL;
+    while(!nullp(arglist)){
+        res = eval(car(arglist));
+        if(res == NIL)
+            return(NIL);
+        arglist = cdr(arglist);
+    }
+    return(res);
+}
+
+int f_or(int arglist)
+{
+    int res;
+
+    while(!nullp(arglist)){
+        res = eval(car(arglist));
+        if(res != NIL)
+            return(res);
+        arglist = cdr(arglist);
+    }
+    return(NIL);
 }
 
 //--------quasi-quote---------------

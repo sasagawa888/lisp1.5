@@ -234,6 +234,8 @@ int f_macro(int arglist);
 int f_lambda(int arglist);
 int f_if(int addr);
 int f_cond(int addr);
+int f_and(int addr);
+int f_or(int addr);
 int f_numberp(int addr);
 int f_symbolp(int addr);
 int f_listp(int addr);
