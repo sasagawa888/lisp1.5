@@ -996,8 +996,8 @@ int eqp(int addr1, int addr2)
 {
     if (addr1 == addr2)
 	return (1);
-    else if ((numberp(addr1)) && (numberp(addr2))
-	     && ((GET_INT(addr1)) == (GET_INT(addr2))))
+    else if (floatp(addr1) && floatp(addr2)
+	     && GET_FLT(addr1)-GET_FLT(addr2) < DBL_MIN)
 	return (1);
     else if ((symbolp(addr1)) && (symbolp(addr2))
 	     && (SAME_NAME(addr1, addr2)))
@@ -1006,6 +1006,15 @@ int eqp(int addr1, int addr2)
 	return (0);
 }
 
+int equalp(int x, int y)
+{
+    if(atomp(x) && atomp(y))
+        return(eqp(x,y));
+    else if(eqp(car(x),car(y)) && equalp(cdr(x),cdr(y)))
+        return(1); 
+
+    return(NIL);
+}
 
 
 int subrp(int addr)
@@ -1279,6 +1288,7 @@ void initsubr(void)
     defsubr("length", f_length);
     defsubr("append", f_append);
     defsubr("eq", f_eq);
+    defsubr("equal", f_equal);
     defsubr("null", f_nullp);
     defsubr("atom", f_atomp);
     defsubr("gbc", f_gbc);
@@ -1661,6 +1671,19 @@ int f_eq(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     if (eqp(arg1, arg2))
+	return (T);
+    else
+	return (NIL);
+}
+
+int f_equal(int arglist)
+{
+    int arg1, arg2;
+
+    checkarg(LEN2_TEST, "equal", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    if (equalp(arg1, arg2))
 	return (T);
     else
 	return (NIL);
