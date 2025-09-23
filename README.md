@@ -26,10 +26,12 @@ Exit the interpreter by typing:
 ## Functions
 
 ```
-LISP 1.5
 > oblist
-(nil t plus minus times quotient add1 sub1 quit hdmp car cdr cons list length append eq null atom oblist gbc read eval apply print prin1 greaterp smallerp zerop onep numberp symbolp listp assoc set quote setq defun lambda macro if begin cond)
-> 
+(NIL T PLUS DIFFERENCE MINUS TIMES QUOTIENT DIVIDE ADD SUB MAX MIN
+ RECIP REMAINDER QUIT HDMP CAR CDR CONS LIST REVERSE LENGTH APPEND
+ EQ EQUAL NULL ATOM GBC READ EVAL APPLY PRINT PRIN GREATERP LESSP
+ ZEROP ONEP MINUSP NUMBERP FIXP SYMBOLP LISTP ASSOC MEMBER SET NOT
+ QUOTE SETQ DEFUN LAMBDA MACRO IF BEGIN COND AND OR)
 
 ```
 
