@@ -612,7 +612,8 @@ int makesym(char *name)
     while(name[pos] != 0){
         if(islower(name[pos]))
             name1[pos] = name[pos] - 32;
-
+        else 
+            name1[pos] = name[pos]; 
         pos++;
     }
     index = hash(name1);
@@ -2001,7 +2002,6 @@ int f_defun(int arglist)
     checkarg(LEN3_TEST, "defun", arglist);
     checkarg(SYMBOL_TEST, "defun", car(arglist));
     checkarg(LIST_TEST, "defun", cadr(arglist));
-    checkarg(LIST_TEST, "defun", caddr(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
     bindfunc1(GET_NAME(arg1), arg2);
