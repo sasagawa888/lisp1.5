@@ -20,13 +20,36 @@ jmp_buf buf;
 int cell_hash_table[HASHTBSIZE];
 
 FILE *input_stream;
+int gbc_sw = 0;
 
-int main(void)
-{
+int main(int argc, char *argv[]) {
+    
     printf("LISP 1.5\n");
     input_stream = stdin;
     initcell();
     initsubr();
+    
+    if (argc < 2) {
+        fprintf(stderr, "Usage: %s <lisp_file>\n", argv[0]);
+        return 1;
+    }
+
+    input_stream = fopen(argv[1], "r");
+    if (!input_stream) {
+        perror("Cannot open file");
+        return 1;
+    }
+    int exp;
+
+    while(1){
+        exp =read();
+        if(exp == EOF)
+            break;
+        eval(exp);
+    }
+    fclose(input_stream);
+
+    input_stream = stdin;
     int ret = setjmp(buf);
 
   repl:
@@ -230,9 +253,10 @@ void heapdump(int start, int end)
 void gbc(void)
 {
     int addr;
-
+    if(gbc_sw){
     printf("enter GBC free=%d\n", fc);
     fflush(stdout);
+    }
     gbcmark();
     gbcsweep();
     fc = 0;
@@ -240,8 +264,10 @@ void gbc(void)
 	if (IS_EMPTY(addr))
 	    fc++;
     }
+    if(gbc_sw){
     printf("exit GBC free=%d\n", fc);
     fflush(stdout);
+    }
 }
 
 
@@ -259,6 +285,8 @@ void markoblist(void)
 
 void markcell(int addr)
 {
+    if(integerp(addr))
+    return;
     if (USED_CELL(addr))
 	return;
 
@@ -739,9 +767,9 @@ void gettoken(void)
 	return;
     }
 
-    c = getchar();
+    c = fgetc(input_stream);
     while ((c == SPACE) || (c == EOL) || (c == TAB))
-	c = getchar();
+	c = fgetc(input_stream);
 
     switch (c) {
     case '(':
@@ -765,10 +793,13 @@ void gettoken(void)
     case '@':
 	stok.type = ATMARK;
 	break;
+    case EOF:
+    stok.type = FILEEND;
+    return;
     default:{
 	    pos = 0;
 	    stok.buf[pos++] = c;
-	    while (((c = getchar()) != EOL) && (pos < BUFSIZE) &&
+	    while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE) &&
 		   (c != SPACE) && (c != '(') && (c != ')') &&
 		   (c != '`') && (c != ',') && (c != '@'))
 		stok.buf[pos++] = c;
@@ -910,6 +941,8 @@ int read(void)
 {
     gettoken();
     switch (stok.type) {
+    case FILEEND:
+    return(EOF);
     case INTEGER:
 	return (makeint(atoi(stok.buf)));
     case FLOAT:
@@ -1393,7 +1426,7 @@ void initsubr(void)
     deffsubr("lambda", f_lambda);
     deffsubr("macro", f_macro);
     deffsubr("if", f_if);
-    deffsubr("begin", f_progn);
+    deffsubr("progn", f_progn);
     deffsubr("cond", f_cond);
     deffsubr("and", f_and);
     deffsubr("or", f_or);
@@ -2004,7 +2037,15 @@ int f_greaterp(int arglist)
 
 int f_gbc(int arglist)
 {
-    gbc();
+
+    if(car(arglist) == T)
+        gbc_sw = 1;
+    else if(car(arglist) == NIL)
+        gbc_sw = 0;
+    else if (car(arglist) == makeint(1)){
+        printf("execute gc!\n");
+        gbc();
+    }
     return (T);
 }
 

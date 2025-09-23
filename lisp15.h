@@ -35,7 +35,7 @@ typedef struct cell {
 } cell;
 
 
-typedef enum toktype {LPAREN,RPAREN,QUOTE,DOT,BACKQUOTE,COMMA,ATMARK,INTEGER,FLOAT,SYMBOL,OTHER} toktype;
+typedef enum toktype {LPAREN,RPAREN,QUOTE,DOT,BACKQUOTE,COMMA,ATMARK,INTEGER,FLOAT,SYMBOL,OTHER,FILEEND} toktype;
 typedef enum backtrack {GO,BACK} backtrack;
 
 typedef struct token {
