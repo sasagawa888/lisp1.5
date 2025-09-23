@@ -1285,6 +1285,7 @@ void initsubr(void)
     defsubr("cdr", f_cdr);
     defsubr("cons", f_cons);
     defsubr("list", f_list);
+    defsubr("reverse", f_reverse);
     defsubr("length", f_length);
     defsubr("append", f_append);
     defsubr("eq", f_eq);
@@ -1723,6 +1724,21 @@ int f_length(int arglist)
 int f_list(int arglist)
 {
     return (list(arglist));
+}
+
+int f_reverse(int arglist)
+{
+    int arg1,res;
+    checkarg(LEN1_TEST, "reverse", arglist);
+    checkarg(LIST_TEST, "reverse", car(arglist));
+
+    arg1 = car(arglist);
+    res = NIL;
+    while(!nullp(arg1)){
+        res = cons(car(arg1),res);
+        arg1 = cdr(arg1);
+    }
+    return(res);
 }
 
 int f_assoc(int arglist)

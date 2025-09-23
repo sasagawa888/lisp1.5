@@ -218,6 +218,7 @@ int f_cdr(int addr);
 int f_cons(int addr);
 int f_length(int addr);
 int f_list(int addr);
+int f_reverse(int addr);
 int f_assoc(int addr);
 int f_append(int addr);
 int f_nullp(int addr);
