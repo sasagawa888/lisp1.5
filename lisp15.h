@@ -122,6 +122,7 @@ int ap; //arglist pointer
 #define LENS1_TEST		9
 #define LENS2_TEST		10
 #define COND_TEST		11	
+#define DEFLIST_TEST	12
 
 
 void initcell(void);
@@ -199,6 +200,7 @@ void error(int errnum, char *fun, int arg);
 void checkarg(int test, char *fun, int arg);
 int isintlis(int arg);
 int isnumlis(int arg);
+int isdeflis(int arg);
 
 //---subr-------
 int f_plus(int addr);
@@ -239,6 +241,7 @@ int f_set(int addr);
 int f_not(int addr);
 int f_quote(int addr);
 int f_setq(int addr);
+int f_define(int addr);
 int f_defun(int addr);
 int f_macro(int arglist);
 int f_lambda(int arglist);

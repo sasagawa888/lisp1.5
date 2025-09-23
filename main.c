@@ -1286,6 +1286,11 @@ void checkarg(int test, char *fun, int arg)
 	    return;
 	else
 	    error(ARG_LEN3_ERR, fun, arg);
+    case DEFLIST_TEST:
+	if (isdeflis(arg))
+	    return;
+	else
+	    error(ILLEGAL_OBJ_ERR, fun, arg);
     }
 }
 
@@ -1310,6 +1315,17 @@ int isnumlis(int arg)
 	    return (0);
     return (1);
 }
+
+int isdeflis(int arg)
+{
+    while (!(IS_NIL(arg)))
+	if (symbolp(car(car(arg))) && listp(cadr(car(arg))))
+	    arg = cdr(arg);
+	else
+	    return (0);
+    return (1);
+}
+
 
 
 
@@ -1422,6 +1438,7 @@ void initsubr(void)
 
     deffsubr("quote", f_quote);
     deffsubr("setq", f_setq);
+    deffsubr("define", f_define);
     deffsubr("defun", f_defun);
     deffsubr("lambda", f_lambda);
     deffsubr("macro", f_macro);
@@ -2167,6 +2184,19 @@ int f_setq(int arglist)
     bindsym(arg1, arg2);
     return (T);
 }
+int f_define(int arglist)
+{
+    int sym,lam;
+
+    while(!nullp(arglist)){
+        sym = car(car(arglist));
+        lam = eval(cadr(car(arglist)));
+        bindsym(sym,lam);
+        arglist = cdr(arglist);
+    }
+    return(T);
+}
+
 
 int f_defun(int arglist)
 {
