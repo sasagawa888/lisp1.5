@@ -1439,7 +1439,6 @@ void initsubr(void)
     deffsubr("quote", f_quote);
     deffsubr("setq", f_setq);
     deffsubr("define", f_define);
-    deffsubr("defun", f_defun);
     deffsubr("lambda", f_lambda);
     deffsubr("macro", f_macro);
     deffsubr("if", f_if);
@@ -2198,19 +2197,6 @@ int f_define(int arglist)
     return(T);
 }
 
-
-int f_defun(int arglist)
-{
-    int arg1, arg2;
-
-    checkarg(LEN3_TEST, "defun", arglist);
-    checkarg(SYMBOL_TEST, "defun", car(arglist));
-    checkarg(LIST_TEST, "defun", cadr(arglist));
-    arg1 = car(arglist);
-    arg2 = cdr(arglist);
-    bindfunc1(GET_NAME(arg1), arg2);
-    return (T);
-}
 
 int f_lambda(int arglist)
 {

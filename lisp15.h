@@ -242,7 +242,6 @@ int f_not(int addr);
 int f_quote(int addr);
 int f_setq(int addr);
 int f_define(int addr);
-int f_defun(int addr);
 int f_macro(int arglist);
 int f_lambda(int arglist);
 int f_if(int addr);
