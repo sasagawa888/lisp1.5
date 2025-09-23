@@ -1257,6 +1257,8 @@ void initsubr(void)
     defsubr("sub1", f_sub1);
     defsubr("max", f_max);
     defsubr("min", f_min);
+    defsubr("recip", f_recip);
+    defsubr("remainder", f_remainder);
     defsubr("quit", f_quit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
@@ -1534,6 +1536,33 @@ int f_min(int arglist)
     }
     return (res);
 }
+
+
+int f_recip(int arglist)
+{
+    int arg1;
+
+    checkarg(LEN1_TEST, "recip", arglist);
+    checkarg(NUMLIST_TEST, "recip", arglist);
+    arg1 = car(arglist);
+    if(integerp(arg1))
+        return(makeint(0));
+
+    return(quotient(makeflt(1.0),arg1));
+}
+
+int f_remainder(int arglist)
+{
+    int arg1,arg2;
+
+    checkarg(LEN2_TEST, "remainder", arglist);
+    checkarg(INTLIST_TEST, "remainder", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(makeint(GET_INT(arg1)%GET_INT(arg2)));
+}
+
+
 
 int f_quit(int arglist)
 {
