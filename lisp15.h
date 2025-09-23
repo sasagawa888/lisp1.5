@@ -220,6 +220,7 @@ int f_length(int addr);
 int f_list(int addr);
 int f_reverse(int addr);
 int f_assoc(int addr);
+int f_member(int addr);
 int f_append(int addr);
 int f_nullp(int addr);
 int f_atomp(int addr);

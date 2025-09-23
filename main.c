@@ -332,6 +332,149 @@ void checkgbc(void)
     if (fc < FREESIZE)
 	gbc();
 }
+//-------------data type-----------------
+
+int atomp(int addr)
+{
+    if(integerp(addr))
+    return(1);
+    if ((IS_FLT(addr)) || (IS_SYMBOL(addr)))
+	return (1);
+    else
+	return (0);
+}
+
+
+int integerp(int addr)
+{
+    if (addr >= INT_FLAG)
+	return (1);
+    else if (addr < 0)
+	return (1);
+    else
+	return (0);
+}
+
+int floatp(int addr)
+{   
+    if(IS_FLT(addr))
+        return(1);
+    else
+        return(0);
+}
+
+int numberp(int addr)
+{
+    if(integerp(addr))
+    return(1);
+    else if (IS_FLT(addr))
+	return (1);
+    else
+	return (0);
+}
+
+int fixp(int addr)
+{
+    if(integerp(addr))
+    return(1);
+    else
+	return (0);
+}
+
+
+int symbolp(int addr)
+{
+    if (IS_SYMBOL(addr))
+	return (1);
+    else
+	return (0);
+}
+
+int listp(int addr)
+{
+    if (IS_LIST(addr) || IS_NIL(addr))
+	return (1);
+    else
+	return (0);
+}
+
+int nullp(int addr)
+{
+    if (IS_NIL(addr))
+	return (1);
+    else
+	return (0);
+}
+
+
+int eqp(int addr1, int addr2)
+{
+    if (addr1 == addr2)
+	return (1);
+    else if (floatp(addr1) && floatp(addr2)
+	     && GET_FLT(addr1)-GET_FLT(addr2) < DBL_MIN)
+	return (1);
+    else if ((symbolp(addr1)) && (symbolp(addr2))
+	     && (SAME_NAME(addr1, addr2)))
+	return (1);
+    else
+	return (0);
+}
+
+int equalp(int x, int y)
+{
+    if(atomp(x) && atomp(y))
+        return(eqp(x,y));
+    else if(eqp(car(x),car(y)) && equalp(cdr(x),cdr(y)))
+        return(1); 
+
+    return(NIL);
+}
+
+
+int subrp(int addr)
+{
+    int val;
+
+    val = findsym(addr);
+    if (val != -1)
+	return (IS_SUBR(val));
+    else
+	return (0);
+}
+
+int fsubrp(int addr)
+{
+    int val;
+
+    val = findsym(addr);
+    if (val != -1)
+	return (IS_FSUBR(val));
+    else
+	return (0);
+}
+
+int functionp(int addr)
+{
+    int val;
+
+    val = findsym(addr);
+    if (val != -1)
+	return (IS_FUNC(val));
+    else
+	return (0);
+}
+
+int macrop(int addr)
+{
+    int val;
+
+    val = findsym(addr);
+    if (val != -1)
+	return (IS_MACRO(val));
+    else
+	return (0);
+}
 
 //--------------list---------------------
 
@@ -392,6 +535,16 @@ int assoc(int sym, int lis)
 	return (assoc(sym, cdr(lis)));
 }
 
+int member(int x, int lis)
+{
+    if(nullp(lis))
+        return(NIL);
+    else if(equalp(x,car(lis)))
+        return(T);
+    else 
+        return(member(x,cdr(lis)));
+}
+
 int length(int addr)
 {
     int len = 0;
@@ -417,24 +570,6 @@ int append(int x, int y)
 	return (y);
     else
 	return (cons(car(x), append(cdr(x), y)));
-}
-//-----------data type--------------------
-int integerp(int addr)
-{
-    if (addr >= INT_FLAG)
-	return (1);
-    else if (addr < 0)
-	return (1);
-    else
-	return (0);
-}
-
-int floatp(int addr)
-{   
-    if(IS_FLT(addr))
-        return(1);
-    else
-        return(0);
 }
 
 //----------------------------------------
@@ -938,130 +1073,6 @@ int evlis(int addr)
 }
 
 
-int atomp(int addr)
-{
-    if(integerp(addr))
-    return(1);
-    if ((IS_FLT(addr)) || (IS_SYMBOL(addr)))
-	return (1);
-    else
-	return (0);
-}
-
-int numberp(int addr)
-{
-    if(integerp(addr))
-    return(1);
-    else if (IS_FLT(addr))
-	return (1);
-    else
-	return (0);
-}
-
-int fixp(int addr)
-{
-    if(integerp(addr))
-    return(1);
-    else
-	return (0);
-}
-
-
-int symbolp(int addr)
-{
-    if (IS_SYMBOL(addr))
-	return (1);
-    else
-	return (0);
-}
-
-int listp(int addr)
-{
-    if (IS_LIST(addr) || IS_NIL(addr))
-	return (1);
-    else
-	return (0);
-}
-
-int nullp(int addr)
-{
-    if (IS_NIL(addr))
-	return (1);
-    else
-	return (0);
-}
-
-
-int eqp(int addr1, int addr2)
-{
-    if (addr1 == addr2)
-	return (1);
-    else if (floatp(addr1) && floatp(addr2)
-	     && GET_FLT(addr1)-GET_FLT(addr2) < DBL_MIN)
-	return (1);
-    else if ((symbolp(addr1)) && (symbolp(addr2))
-	     && (SAME_NAME(addr1, addr2)))
-	return (1);
-    else
-	return (0);
-}
-
-int equalp(int x, int y)
-{
-    if(atomp(x) && atomp(y))
-        return(eqp(x,y));
-    else if(eqp(car(x),car(y)) && equalp(cdr(x),cdr(y)))
-        return(1); 
-
-    return(NIL);
-}
-
-
-int subrp(int addr)
-{
-    int val;
-
-    val = findsym(addr);
-    if (val != -1)
-	return (IS_SUBR(val));
-    else
-	return (0);
-}
-
-int fsubrp(int addr)
-{
-    int val;
-
-    val = findsym(addr);
-    if (val != -1)
-	return (IS_FSUBR(val));
-    else
-	return (0);
-}
-
-int functionp(int addr)
-{
-    int val;
-
-    val = findsym(addr);
-    if (val != -1)
-	return (IS_FUNC(val));
-    else
-	return (0);
-}
-
-int macrop(int addr)
-{
-    int val;
-
-    val = findsym(addr);
-    if (val != -1)
-	return (IS_MACRO(val));
-    else
-	return (0);
-}
-
-
 //-------error------
 void error(int errnum, char *fun, int arg)
 {
@@ -1308,6 +1319,7 @@ void initsubr(void)
     defsubr("symbolp", f_symbolp);
     defsubr("listp", f_listp);
     defsubr("assoc", f_assoc);
+    defsubr("member", f_member);
     defsubr("set", f_set);
     defsubr("not", f_not);
 
@@ -1754,6 +1766,18 @@ int f_assoc(int arglist)
     arg2 = cadr(arglist);
     return(assoc(arg1,arg2));
 }
+
+int f_member(int arglist)
+{
+    int arg1,arg2;
+
+    checkarg(LEN2_TEST, "member", arglist);
+    checkarg(LIST_TEST, "member", cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(member(arg1,arg2));
+}
+
 
 int f_append(int arglist)
 {
