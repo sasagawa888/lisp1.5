@@ -1395,6 +1395,7 @@ void initsubr(void)
     deffsubr("cond", f_cond);
     deffsubr("and", f_and);
     deffsubr("or", f_or);
+    deffsubr("comment", f_comment);
 
     int addr, addr1, res;
     res = NIL;
@@ -2232,6 +2233,10 @@ int f_or(int arglist)
         arglist = cdr(arglist);
     }
     return(NIL);
+}
+
+int f_comment(int arglist){
+    return(T);
 }
 
 //--------quasi-quote---------------
