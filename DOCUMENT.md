@@ -88,6 +88,9 @@ The system is written as simply as possible.
 The entire implementation is about 2,300 lines in main.c alone.
 It can serve as a reference for those interested in building their own LISP interpreter.
 
+## Immediate values:
+I made integers immediate values to save cells and improve speed. By setting the second-highest bit of the integer, they are treated as positive integers. Negative numbers are outside the cell area, so they remain immediate values as they are.
+
 ## Enjoy
 For those who played with LISP 1.5 at the time, this will bring back nostalgic memories.
 For those who learned LISP after Common Lisp, it may offer a fresh and surprising experience.
