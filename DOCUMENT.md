@@ -39,6 +39,7 @@ Example:
 ```
 
 ## Sample Codes
+In my reimplementation, I treat DEFINE as an FSUBR, so no explicit QUOTE is needed around lambda expressions.
 
 ```
 (COMMENT THIS IS PUNCH CARD)
