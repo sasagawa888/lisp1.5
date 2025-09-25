@@ -1,3 +1,5 @@
 *.o
 lisp
 *.c~
+lisp
+ignore
