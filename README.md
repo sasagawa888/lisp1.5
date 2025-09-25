@@ -38,10 +38,10 @@ Exit the interpreter by typing:
 
 ```
 LISP 1.5
-> (defun fact (n) (if (eq n 0) 1 (times n (fact (sub1 n)))))
-t
-> (fact 10)
-3628800
+> (define ((foo (lambda (x) x))))
+T
+> (foo 3)
+3
 > 
 
 ```
