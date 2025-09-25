@@ -71,14 +71,16 @@ You can force garbage collection by using (gbc 1).
 ## Funarg Problem
 Due to dynamic scope, you can perform computational experiments on the funarg problem using mapping functions.
 
-maplist mapcon map  see LISP1.5 user's manual
-
 example:
 ```
-> (setq x 2)
-2
-> (maplist '(1 2 3) (lambda (y) (plus x y)))
-(3 4 5)
+(DEFINE ((X (QUOTE IGNORED))))
+
+(DEFINE ((MAPLIST
+  (LAMBDA (X F)
+    (COND ((EQ X NIL) NIL)
+          (T (CONS (F (CAR X)) (MAPLIST (CDR X) F))))))))
+
+(MAPLIST (QUOTE (1 2 3)) (LAMBDA (Y) (CONS Y X))) -> ((1 1 2 3) (2 2 3) (3 3))
 
 ```
 Note that the argument order of mapping functions is different from modern Lisp.
