@@ -2285,14 +2285,23 @@ int find_label(int label,int prog)
 
 int f_prog(int arglist)
 {
-    int res,prog;
+    int arg1,arg2,res,prog,save;
 
-    prog = arglist;
+    checkarg(LIST_TEST,"prog",car(arglist));
+    arg1 = car(arglist);
+    arg2 = cdr(arglist);
+    prog = arg2;
     return_flag = 0;
+    save = ep;
     res = NIL;
-    while (!(nullp(arglist))) {
-    res = car(arglist);
-    if(symbolp(car(arglist))){
+    while(!nullp(arg1)){
+        bindsym(car(arg1),NIL);
+        arg1 = cdr(arg1);
+    }
+
+    while (!nullp(arg2)) {
+    res = car(arg2);
+    if(symbolp(car(arg2))){
         goto skip;
     }
     else if(listp(res) && car(res) == makesym("go")){
@@ -2300,11 +2309,14 @@ int f_prog(int arglist)
     }
 
 	res = eval(res);
-    if(return_flag)
+    if(return_flag){
+        ep = save;
         return(res);
-    skip:
-	arglist = cdr(arglist);
     }
+    skip:
+	arg2 = cdr(arg2);
+    }
+    ep = save;
     return (res);
 }
 

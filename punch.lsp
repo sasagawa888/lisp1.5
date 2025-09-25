@@ -15,4 +15,14 @@
               ((EQ N 1) 1)
               (T (PLUS (FIB (SUB1 N)) (FIB (DIFFERENCE N 2)))))))
 
+(SUM (LAMBDA (N)
+        (PROG (I S)
+             (SETQ I 1)
+             (SETQ S 0)
+             A (COND ((GREATERP I N) (RETURN S)))
+            (SETQ S (PLUS S I))
+            (SETQ I (ADD1 I))
+            (GO A))))
+
 )) 
+
