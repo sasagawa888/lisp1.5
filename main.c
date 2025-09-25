@@ -2275,7 +2275,7 @@ int find_label(int label,int prog)
 {
     while(!nullp(prog)){
         if(eqp(car(prog),label))
-            return(cdr(prog));
+            return(prog);
         prog = cdr(prog);
     }
     error(ILLEGAL_OBJ_ERR,"prog",label);
@@ -2298,14 +2298,14 @@ int f_prog(int arglist)
         bindsym(car(arg1),NIL);
         arg1 = cdr(arg1);
     }
-
     while (!nullp(arg2)) {
     res = car(arg2);
-    if(symbolp(car(arg2))){
+    if(symbolp(res)){
         goto skip;
     }
-    else if(listp(res) && car(res) == makesym("go")){
-        arglist = (find_label(cadr(res),prog));
+    else if(listp(res) && eqp(car(res),makesym("go"))){
+        arg2 = (find_label(cadr(res),prog));
+        goto skip;
     }
 
 	res = eval(res);
