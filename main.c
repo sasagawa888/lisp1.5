@@ -20,7 +20,8 @@ jmp_buf buf;
 int cell_hash_table[HASHTBSIZE];
 
 FILE *input_stream;
-int gbc_sw = 0;
+int gbc_flag = 0;
+int return_flag = 0;
 
 int main(int argc, char *argv[]) {
     
@@ -253,7 +254,7 @@ void heapdump(int start, int end)
 void gbc(void)
 {
     int addr;
-    if(gbc_sw){
+    if(gbc_flag){
     printf("enter GBC free=%d\n", fc);
     fflush(stdout);
     }
@@ -264,7 +265,7 @@ void gbc(void)
 	if (IS_EMPTY(addr))
 	    fc++;
     }
-    if(gbc_sw){
+    if(gbc_flag){
     printf("exit GBC free=%d\n", fc);
     fflush(stdout);
     }
@@ -1443,6 +1444,8 @@ void initsubr(void)
     deffsubr("macro", f_macro);
     deffsubr("if", f_if);
     deffsubr("progn", f_progn);
+    deffsubr("prog", f_prog);
+    deffsubr("return", f_return);
     deffsubr("cond", f_cond);
     deffsubr("and", f_and);
     deffsubr("or", f_or);
@@ -2055,9 +2058,9 @@ int f_gbc(int arglist)
 {
 
     if(car(arglist) == T)
-        gbc_sw = 1;
+        gbc_flag = 1;
     else if(car(arglist) == NIL)
-        gbc_sw = 0;
+        gbc_flag = 0;
     else if (car(arglist) == makeint(1)){
         printf("execute gc!\n");
         gbc();
@@ -2267,6 +2270,53 @@ int f_progn(int arglist)
     }
     return (res);
 }
+
+int find_label(int label,int prog)
+{
+    while(!nullp(prog)){
+        if(eqp(car(prog),label))
+            return(cdr(prog));
+        prog = cdr(prog);
+    }
+    error(ILLEGAL_OBJ_ERR,"prog",label);
+
+    return(NIL);
+}
+
+int f_prog(int arglist)
+{
+    int res,prog;
+
+    prog = arglist;
+    return_flag = 0;
+    res = NIL;
+    while (!(nullp(arglist))) {
+    res = car(arglist);
+    if(symbolp(car(arglist))){
+        goto skip;
+    }
+    else if(listp(res) && car(res) == makesym("go")){
+        arglist = (find_label(cadr(res),prog));
+    }
+
+	res = eval(res);
+    if(return_flag)
+        return(res);
+    skip:
+	arglist = cdr(arglist);
+    }
+    return (res);
+}
+
+int f_return(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST,"return",arglist);
+    arg1 = car(arglist);
+    return_flag = 1;
+    return(eval(arg1));
+}
+
 
 int f_and(int arglist)
 {

@@ -265,6 +265,8 @@ int f_read(int addr);
 int f_print(int addr);
 int f_prin1(int addr);
 int f_progn(int addr);
+int f_prog(int addr);
+int f_return(int addr);
 
 
 int quasi_transfer1(int x);
