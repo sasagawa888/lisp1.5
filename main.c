@@ -112,7 +112,7 @@ void bindsym(int sym, int val)
     int addr;
 
     addr = assoc(sym, ep);
-    if (addr == 0)
+    if (addr == NO)
 	assocsym(sym, val);
     else
 	SET_CDR(addr, val);
@@ -138,8 +138,8 @@ int findsym(int sym)
 
     addr = assoc(sym, ep);
 
-    if (addr == 0)
-	return (-1);
+    if (addr == NO)
+	return (NO);
     else
 	return (cdr(addr));
 }
@@ -476,7 +476,7 @@ int subrp(int addr)
     int val;
 
     val = findsym(addr);
-    if (val != -1)
+    if (val != NO)
 	return (IS_SUBR(val));
     else
 	return (0);
@@ -487,7 +487,7 @@ int fsubrp(int addr)
     int val;
 
     val = findsym(addr);
-    if (val != -1)
+    if (val != NO)
 	return (IS_FSUBR(val));
     else
 	return (0);
@@ -498,7 +498,7 @@ int functionp(int addr)
     int val;
 
     val = findsym(addr);
-    if (val != -1)
+    if (val != NO)
 	return (IS_FUNC(val));
     else
 	return (0);
@@ -509,7 +509,7 @@ int macrop(int addr)
     int val;
 
     val = findsym(addr);
-    if (val != -1)
+    if (val != NO)
 	return (IS_MACRO(val));
     else
 	return (0);
@@ -571,7 +571,7 @@ int cons(int car, int cdr)
 int assoc(int sym, int lis)
 {
     if (nullp(lis))
-	return (0);
+	return (NO);
     else if (eqp(sym, caar(lis)))
 	return (car(lis));
     else
@@ -1060,7 +1060,7 @@ int eval(int addr)
 	    return (addr);
 	if (symbolp(addr)) {
 	    res = findsym(addr);
-	    if (res == -1)
+	    if (res == NO)
 		error(CANT_FIND_ERR, "eval", addr);
 	    else
 		return (res);
