@@ -1090,7 +1090,7 @@ int eval(int addr)
             }
             printf("ENTER ");
             print(sym);
-            print(cdr(addr));
+            print(evlis(cdr(addr)));
             printf("\n");
         }
 	    res = apply(eval(car(addr)), evlis(cdr(addr)));
