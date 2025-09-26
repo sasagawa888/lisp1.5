@@ -1764,7 +1764,7 @@ int f_quit(int arglist)
     for (addr = 0; addr < HEAPSIZE; addr++) {
 	free(heap[addr].name);
     }
-    printf("- good bye -\n");
+    printf("- Quitting LISP. With respect to John McCarthy. -\n");
     longjmp(buf, 2);
 }
 
