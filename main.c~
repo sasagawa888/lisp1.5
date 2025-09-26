@@ -23,31 +23,30 @@ FILE *input_stream;
 int gbc_flag = 0;
 int return_flag = 0;
 
-int main(int argc, char *argv[])
-{
-
+int main(int argc, char *argv[]) {
+    
     printf("LISP 1.5\n");
     input_stream = stdin;
     initcell();
     initsubr();
-
+    
     if (argc < 2) {
-	fprintf(stderr, "Usage: %s <lisp_file>\n", argv[0]);
-	return 1;
+        fprintf(stderr, "Usage: %s <lisp_file>\n", argv[0]);
+        return 1;
     }
 
     input_stream = fopen(argv[1], "r");
     if (!input_stream) {
-	perror("Cannot open file");
-	return 1;
+        perror("Cannot open file");
+        return 1;
     }
     int exp;
 
-    while (1) {
-	exp = read();
-	if (exp == EOF)
-	    break;
-	eval(exp);
+    while(1){
+        exp =read();
+        if(exp == EOF)
+            break;
+        eval(exp);
     }
     fclose(input_stream);
 
@@ -239,7 +238,7 @@ void cellprint(int addr)
     printf("%07d ", GET_BIND(addr));
     printf("%s \n", GET_NAME(addr));
 }
-
+   
 void heapdump(int start, int end)
 {
     int i;
@@ -255,9 +254,9 @@ void heapdump(int start, int end)
 void gbc(void)
 {
     int addr;
-    if (gbc_flag) {
-	printf("enter GBC free=%d\n", fc);
-	fflush(stdout);
+    if(gbc_flag){
+    printf("enter GBC free=%d\n", fc);
+    fflush(stdout);
     }
     gbcmark();
     gbcsweep();
@@ -266,9 +265,9 @@ void gbc(void)
 	if (IS_EMPTY(addr))
 	    fc++;
     }
-    if (gbc_flag) {
-	printf("exit GBC free=%d\n", fc);
-	fflush(stdout);
+    if(gbc_flag){
+    printf("exit GBC free=%d\n", fc);
+    fflush(stdout);
     }
 }
 
@@ -287,8 +286,8 @@ void markoblist(void)
 
 void markcell(int addr)
 {
-    if (integerp(addr))
-	return;
+    if(integerp(addr))
+    return;
     if (USED_CELL(addr))
 	return;
 
@@ -364,13 +363,12 @@ void checkgbc(void)
     if (fc < FREESIZE)
 	gbc();
 }
-
 //-------------data type-----------------
 
 int atomp(int addr)
 {
-    if (integerp(addr))
-	return (1);
+    if(integerp(addr))
+    return(1);
     if ((IS_FLT(addr)) || (IS_SYMBOL(addr)))
 	return (1);
     else
@@ -389,21 +387,21 @@ int integerp(int addr)
 }
 
 int floatp(int addr)
-{
-    if (addr >= HEAPSIZE || addr < 0)
-	return (0);
-    else if (IS_FLT(addr))
-	return (1);
+{   
+    if(addr >= HEAPSIZE || addr <0)
+        return(0);
+    else if(IS_FLT(addr))
+        return(1);
     else
-	return (0);
+        return(0);
 }
 
 int numberp(int addr)
 {
-    if (integerp(addr))
-	return (1);
-    if (addr >= HEAPSIZE || addr < 0)
-	return (0);
+    if(integerp(addr))
+    return(1);
+    if(addr >= HEAPSIZE || addr <0)
+    return(0);
     else if (IS_FLT(addr))
 	return (1);
     else
@@ -412,8 +410,8 @@ int numberp(int addr)
 
 int fixp(int addr)
 {
-    if (integerp(addr))
-	return (1);
+    if(integerp(addr))
+    return(1);
     else
 	return (0);
 }
@@ -421,8 +419,8 @@ int fixp(int addr)
 
 int symbolp(int addr)
 {
-    if (addr >= HEAPSIZE || addr < 0)
-	return (0);
+    if(addr >= HEAPSIZE || addr <0)
+    return(0);
     else if (IS_SYMBOL(addr))
 	return (1);
     else
@@ -431,8 +429,8 @@ int symbolp(int addr)
 
 int listp(int addr)
 {
-    if (addr >= HEAPSIZE || addr < 0)
-	return (0);
+    if(addr >= HEAPSIZE || addr <0)
+        return(0);
     else if (IS_LIST(addr) || IS_NIL(addr))
 	return (1);
     else
@@ -453,7 +451,7 @@ int eqp(int addr1, int addr2)
     if (addr1 == addr2)
 	return (1);
     else if (floatp(addr1) && floatp(addr2)
-	     && GET_FLT(addr1) - GET_FLT(addr2) < DBL_MIN)
+	     && GET_FLT(addr1)-GET_FLT(addr2) < DBL_MIN)
 	return (1);
     else if ((symbolp(addr1)) && (symbolp(addr2))
 	     && (SAME_NAME(addr1, addr2)))
@@ -464,12 +462,12 @@ int eqp(int addr1, int addr2)
 
 int equalp(int x, int y)
 {
-    if (atomp(x) && atomp(y))
-	return (eqp(x, y));
-    else if (eqp(car(x), car(y)) && equalp(cdr(x), cdr(y)))
-	return (1);
+    if(atomp(x) && atomp(y))
+        return(eqp(x,y));
+    else if(eqp(car(x),car(y)) && equalp(cdr(x),cdr(y)))
+        return(1); 
 
-    return (NIL);
+    return(NIL);
 }
 
 
@@ -521,8 +519,8 @@ int macrop(int addr)
 
 int car(int addr)
 {
-    if (addr >= HEAPSIZE || addr < 0)
-	return (NIL);
+    if(addr >= HEAPSIZE || addr < 0)
+        return(NIL);
     return (GET_CAR(addr));
 }
 
@@ -538,8 +536,8 @@ int cdar(int addr)
 
 int cdr(int addr)
 {
-    if (addr >= HEAPSIZE || addr < 0)
-	return (NIL);
+    if(addr >= HEAPSIZE || addr < 0)
+        return(NIL);
     return (GET_CDR(addr));
 }
 
@@ -582,12 +580,12 @@ int assoc(int sym, int lis)
 
 int member(int x, int lis)
 {
-    if (nullp(lis))
-	return (NIL);
-    else if (equalp(x, car(lis)))
-	return (T);
-    else
-	return (member(x, cdr(lis)));
+    if(nullp(lis))
+        return(NIL);
+    else if(equalp(x,car(lis)))
+        return(T);
+    else 
+        return(member(x,cdr(lis)));
 }
 
 int length(int addr)
@@ -619,46 +617,44 @@ int append(int x, int y)
 
 int last(int x)
 {
-    if (nullp(cdr(x)))
-	return (x);
-    else
-	return (last(cdr(x)));
+    if(nullp(cdr(x)))
+        return(x);
+    else 
+        return(last(cdr(x)));
 }
 
 int nconc(int x, int y)
 {
-    if (nullp(x))
-	return (y);
+    if(nullp(x))
+        return(y);
 
-    SET_CDR(last(x), y);
-    return (x);
+    SET_CDR(last(x),y);
+    return(x);
 }
 
 int maplist(int lis, int fun)
 {
-    if (nullp(lis))
-	return (NIL);
-    else
-	return (cons(apply(fun, list1(car(lis))), maplist(cdr(lis), fun)));
+    if(nullp(lis))
+        return(NIL);
+    else 
+        return(cons(apply(fun,list1(car(lis))),maplist(cdr(lis),fun)));
 }
 
 int mapcon(int lis, int fun)
 {
-    if (nullp(lis))
-	return (NIL);
-    else
-	return (nconc
-		(list1(apply(fun, list1(car(lis)))),
-		 mapcon(cdr(lis), fun)));
+    if(nullp(lis))
+        return(NIL);
+    else 
+        return(nconc(list1(apply(fun,list1(car(lis)))),mapcon(cdr(lis),fun)));
 }
 
 int map(int lis, int fun)
 {
-    while (!nullp(lis)) {
-	apply(fun, list1(car(lis)));
-	lis = cdr(lis);
+    while(!nullp(lis)){
+        apply(fun,list1(car(lis)));
+        lis = cdr(lis);
     }
-    return (NIL);
+    return(NIL);
 }
 
 //----------------------------------------
@@ -696,14 +692,14 @@ int makesym(char *name)
     int index, res, pos;
     char name1[SYMSIZE];
 
-    memset(name1, 0, SYMSIZE);
+    memset(name1,0,SYMSIZE);
     pos = 0;
-    while (name[pos] != 0) {
-	if (islower(name[pos]))
-	    name1[pos] = name[pos] - 32;
-	else
-	    name1[pos] = name[pos];
-	pos++;
+    while(name[pos] != 0){
+        if(islower(name[pos]))
+            name1[pos] = name[pos] - 32;
+        else 
+            name1[pos] = name[pos]; 
+        pos++;
     }
     index = hash(name1);
     if ((res = getsym(name1, index)) != 0)
@@ -721,7 +717,7 @@ int makefunc(int addr)
     SET_TAG(val, FUNC);
     SET_BIND(val, addr);
     SET_CDR(val, 0);
-    return (val);
+    return(val);
 }
 
 
@@ -799,8 +795,8 @@ void gettoken(void)
 	stok.type = ATMARK;
 	break;
     case EOF:
-	stok.type = FILEEND;
-	return;
+    stok.type = FILEEND;
+    return;
     default:{
 	    pos = 0;
 	    stok.buf[pos++] = c;
@@ -815,7 +811,7 @@ void gettoken(void)
 		stok.type = INTEGER;
 		break;
 	    }
-	    if (flttoken(stok.buf)) {
+        if (flttoken(stok.buf)) {
 		stok.type = FLOAT;
 		break;
 	    }
@@ -872,34 +868,34 @@ int flttoken(char buf[])
 	while ((c = buf[i]) != NUL)
 	    if (isdigit(c))
 		i++;
-	    else if (c == '.')
-		goto dot;
-	    else if (c == 'e' || c == 'E')
-		goto exp;
-	    else
-		return (0);
+	    else if(c == '.')
+            goto dot;
+		else if(c == 'e' || c == 'E')
+            goto exp;
+        else 
+            return(0);
     }
     return (0);
 
-  dot:
+    dot:
     i++;
-    while ((c = buf[i]) != NUL) {
-	if (isdigit(c))
-	    i++;
-	else if (c == 'e' || c == 'E')
-	    goto exp;
-	else
-	    return (0);
+    while ((c = buf[i]) != NUL){
+	    if (isdigit(c))
+		i++;
+		else if(c == 'e' || c == 'E')
+            goto exp;
+        else 
+            return(0);
     }
     return (1);
 
-  exp:
+    exp:
     i++;
-    while ((c = buf[i]) != NUL) {
-	if (isdigit(c))
-	    i++;
-	else
-	    return (0);
+    while ((c = buf[i]) != NUL){
+	    if (isdigit(c))
+		i++;
+        else 
+            return(0);
     }
     return (1);
 }
@@ -947,7 +943,7 @@ int read(void)
     gettoken();
     switch (stok.type) {
     case FILEEND:
-	return (EOF);
+    return(EOF);
     case INTEGER:
 	return (makeint(atoi(stok.buf)));
     case FLOAT:
@@ -1000,15 +996,15 @@ int readlist(void)
 //-----print------------------
 void print(int addr)
 {
-    if (integerp(addr)) {
-	printf("%d", GET_INT(addr));
-	return;
+    if(integerp(addr)){
+        printf("%d", GET_INT(addr));
+        return;
     }
     switch (GET_TAG(addr)) {
     case FLTN:
 	printf("%g", GET_FLT(addr));
-	if (GET_FLT(addr) - (int) GET_FLT(addr) == 0.0)
-	    printf(".0");
+    if(GET_FLT(addr)-(int)GET_FLT(addr) == 0.0)
+    printf(".0");
 	break;
     case SYM:
 	printf("%s", GET_NAME(addr));
@@ -1070,11 +1066,10 @@ int eval(int addr)
 		return (res);
 	}
     } else if (listp(addr)) {
-	if (numberp(car(addr)))
+    if (numberp(car(addr)))
 	    error(ARG_SYM_ERR, "eval", addr);
-	else if ((symbolp(car(addr)))
-		 && (eqp(car(addr), makesym("quasi-quote"))))
-	    return (eval(quasi_transfer2(cadr(addr), 0)));
+	else if ((symbolp(car(addr))) && (eqp(car(addr), makesym("quasi-quote"))))
+        return (eval(quasi_transfer2(cadr(addr), 0)));
 	else if (subrp(car(addr)))
 	    return (apply(eval(car(addr)), evlis(cdr(addr))));
 	else if (fsubrp(car(addr)))
@@ -1094,38 +1089,38 @@ int apply(int func, int args)
     int varlist, body, res, macrofunc;
 
     res = NIL;
-    switch (GET_TAG(func)) {
-    case SUBR:
-	return ((GET_SUBR(func)) (args));
-    case FSUBR:
-	return ((GET_SUBR(func)) (args));
-    case FUNC:{
-	    varlist = car(GET_BIND(func));
-	    body = cdr(GET_BIND(func));
-	    bindarg(varlist, args);
-	    while (!(IS_NIL(body))) {
-		res = eval(car(body));
-		body = cdr(body);
+	switch (GET_TAG(func)) {
+	case SUBR:
+	    return ((GET_SUBR(func)) (args));
+	case FSUBR:
+	    return ((GET_SUBR(func)) (args));
+	case FUNC:{
+		varlist = car(GET_BIND(func));
+		body = cdr(GET_BIND(func));
+		bindarg(varlist, args);
+		while (!(IS_NIL(body))) {
+		    res = eval(car(body));
+		    body = cdr(body);
+		}
+		unbind();
+		return (res);
 	    }
-	    unbind();
-	    return (res);
-	}
-    case MACRO:{
-	    macrofunc = GET_BIND(func);
-	    varlist = car(GET_BIND(macrofunc));
-	    body = cdr(GET_BIND(macrofunc));
-	    bindarg(varlist, args);
-	    while (!(IS_NIL(body))) {
-		res = eval(car(body));
-		body = cdr(body);
+	case MACRO:{
+		macrofunc = GET_BIND(func);
+		varlist = car(GET_BIND(macrofunc));
+		body = cdr(GET_BIND(macrofunc));
+		bindarg(varlist, args);
+		while (!(IS_NIL(body))) {
+		    res = eval(car(body));
+		    body = cdr(body);
+		}
+		unbind();
+		res = eval(res);
+		return (res);
 	    }
-	    unbind();
-	    res = eval(res);
-	    return (res);
+	default:
+	    error(ILLEGAL_OBJ_ERR, "apply", func);
 	}
-    default:
-	error(ILLEGAL_OBJ_ERR, "apply", func);
-    }
     return (0);
 }
 
@@ -1196,7 +1191,7 @@ void error(int errnum, char *fun, int arg)
 	    break;
 	}
 
-    case ARG_INT_ERR:{
+     case ARG_INT_ERR:{
 	    printf("%s require integer but got ", fun);
 	    print(arg);
 	    break;
@@ -1248,7 +1243,7 @@ void checkarg(int test, char *fun, int arg)
 {
     switch (test) {
     case INTLIST_TEST:
-	if (isintlis(arg))
+    if (isintlis(arg))
 	    return;
 	else
 	    error(ARG_INT_ERR, fun, arg);
@@ -1464,130 +1459,126 @@ void initsubr(void)
 	res = cons(addr1, res);
 	addr = cdr(addr);
     }
-    bindsym(makesym("oblist"), res);
+    bindsym(makesym("oblist"),res);
 }
-
 //---------calculation-------------------
-int plus(int x, int y)
-{
-    if (integerp(x)) {
-	if (integerp(y))
-	    return (makeint(GET_INT(x) + GET_INT(y)));
-	if (floatp(y))
-	    return (makeflt(GET_INT(x) + GET_FLT(y)));
-    } else if (floatp(x)) {
-	if (integerp(y))
-	    return (makeflt(GET_FLT(x) + GET_INT(y)));
-	else if (floatp(y))
-	    return (makeflt(GET_FLT(x) + GET_FLT(y)));
-
+int plus(int x, int y){
+    if(integerp(x)){
+        if(integerp(y))
+            return(makeint(GET_INT(x)+GET_INT(y)));
+        if(floatp(y))
+            return(makeflt(GET_INT(x)+GET_FLT(y)));
+    } else if(floatp(x)){
+        if(integerp(y))
+            return(makeflt(GET_FLT(x)+GET_INT(y)));
+        else if(floatp(y))
+            return(makeflt(GET_FLT(x)+GET_FLT(y))); 
+            
     }
 
-    return (NIL);
+    return(NIL);
 }
 
-int difference(int x, int y)
-{
-    if (integerp(x)) {
-	if (integerp(y))
-	    return (makeint(GET_INT(x) - GET_INT(y)));
-	if (floatp(y))
-	    return (makeflt(GET_INT(x) - GET_FLT(y)));
-    } else if (floatp(x)) {
-	if (integerp(y))
-	    return (makeflt(GET_FLT(x) - GET_INT(y)));
-	else if (floatp(y))
-	    return (makeflt(GET_FLT(x) - GET_FLT(y)));
-
+int difference(int x, int y){
+    if(integerp(x)){
+        if(integerp(y))
+            return(makeint(GET_INT(x)-GET_INT(y)));
+        if(floatp(y))
+            return(makeflt(GET_INT(x)-GET_FLT(y)));
+    } else if(floatp(x)){
+        if(integerp(y))
+            return(makeflt(GET_FLT(x)-GET_INT(y)));
+        else if(floatp(y))
+            return(makeflt(GET_FLT(x)-GET_FLT(y))); 
+            
     }
 
-    return (NIL);
+    return(NIL);
 }
 
-int times(int x, int y)
-{
-    if (integerp(x)) {
-	if (integerp(y))
-	    return (makeint(GET_INT(x) * GET_INT(y)));
-	if (floatp(y))
-	    return (makeflt(GET_INT(x) * GET_FLT(y)));
-    } else if (floatp(x)) {
-	if (integerp(y))
-	    return (makeflt(GET_INT(x) * GET_FLT(y)));
-	else if (floatp(y))
-	    return (makeflt(GET_FLT(x) * GET_FLT(y)));
-
+int times(int x, int y){
+    if(integerp(x)){
+        if(integerp(y))
+            return(makeint(GET_INT(x)*GET_INT(y)));
+        if(floatp(y))
+            return(makeflt(GET_INT(x)*GET_FLT(y)));
+    } else if(floatp(x)){
+        if(integerp(y))
+            return(makeflt(GET_INT(x)*GET_FLT(y)));
+        else if(floatp(y))
+            return(makeflt(GET_FLT(x)*GET_FLT(y))); 
+            
     }
 
-    return (NIL);
+    return(NIL);
 }
 
 
-int quotient(int x, int y)
-{
-    if (integerp(x)) {
-	if (integerp(y))
-	    return (makeint(GET_INT(x) / GET_INT(y)));
-	if (floatp(y))
-	    return (makeflt(GET_INT(x) / GET_FLT(y)));
-    } else if (floatp(x)) {
-	if (integerp(y))
-	    return (makeflt(GET_INT(x) / GET_FLT(y)));
-	else if (floatp(y))
-	    return (makeflt(GET_FLT(x) / GET_FLT(y)));
-
+int quotient(int x, int y){
+    if(integerp(x)){
+        if(integerp(y))
+            return(makeint(GET_INT(x)/GET_INT(y)));
+        if(floatp(y))
+            return(makeflt(GET_INT(x)/GET_FLT(y)));
+    } else if(floatp(x)){
+        if(integerp(y))
+            return(makeflt(GET_INT(x)/GET_FLT(y)));
+        else if(floatp(y))
+            return(makeflt(GET_FLT(x)/GET_FLT(y))); 
+            
     }
 
-    return (NIL);
+    return(NIL);
 }
 
 int greaterp(int x, int y)
 {
-    if (integerp(x)) {
-	if (integerp(y)) {
-	    if (GET_INT(x) > GET_INT(y))
-		return (1);
-	    else
-		return (0);
-	} else if (floatp(y)) {
-	    if (GET_INT(x) > GET_FLT(y))
-		return (1);
-	    else
-		return (0);
-	}
-    } else if (floatp(x)) {
-	if (integerp(y)) {
-	    if (GET_FLT(x) > GET_INT(y))
-		return (1);
-	    else
-		return (0);
-	} else if (floatp(y)) {
-	    if (GET_FLT(x) > GET_FLT(y))
-		return (1);
-	    else
-		return (0);
-	}
+    if(integerp(x)){
+        if(integerp(y)){
+            if(GET_INT(x) > GET_INT(y))
+                return(1);
+            else 
+                return(0);
+        }
+        else if(floatp(y)){
+            if(GET_INT(x) > GET_FLT(y))
+                return(1);
+            else 
+                return(0);
+        }
+    } else if(floatp(x)){
+        if(integerp(y)){
+            if(GET_FLT(x) > GET_INT(y))
+                return(1);
+            else
+                return(0);
+        } else if(floatp(y)){
+            if(GET_FLT(x) > GET_FLT(y))
+                return(1);
+            else
+                return(0);
+        }
     }
-    return (NIL);
+    return(NIL);
 }
 
 int lessp(int x, int y)
 {
-    if (greaterp(y, x))
-	return (1);
+    if(greaterp(y,x))
+        return(1);
     else
-	return (0);
+        return(0);
 }
 
 
 int power(int x, int y)
 {
-    if (y == 1)
-	return (x);
-    else if (y % 2 == 0)
-	return (power(x * x, y / 2));
-    else
-	return (x * power(x, y - 1));
+    if(y == 1)
+        return(x);
+    else if(y%2==0)
+        return(power(x*x,y/2));
+    else 
+        return(x*power(x,y-1));
 }
 
 
@@ -1602,7 +1593,7 @@ int f_plus(int arglist)
     while (!(IS_NIL(arglist))) {
 	arg = car(arglist);
 	arglist = cdr(arglist);
-	res = plus(res, arg);
+	res = plus(res,arg);
     }
     return (res);
 }
@@ -1613,7 +1604,7 @@ int f_add1(int arglist)
 
     checkarg(NUMLIST_TEST, "add1", arglist);
     arg1 = car(arglist);
-    return (plus(arg1, makeint(1)));
+    return (plus(arg1,makeint(1)));
 }
 
 int f_sub1(int arglist)
@@ -1622,17 +1613,17 @@ int f_sub1(int arglist)
 
     checkarg(NUMLIST_TEST, "sub1", arglist);
     arg1 = car(arglist);
-    return (difference(arg1, makeint(1)));
+    return (difference(arg1,makeint(1)));
 }
 
 int f_difference(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
     checkarg(NUMLIST_TEST, "difference", arglist);
     checkarg(LEN2_TEST, "difference", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (difference(arg1, arg2));
+    return(difference(arg1,arg2));
 }
 
 int f_minus(int arglist)
@@ -1642,7 +1633,7 @@ int f_minus(int arglist)
     checkarg(NUMLIST_TEST, "minus", arglist);
     checkarg(LEN1_TEST, "minus", arglist);
     arg1 = car(arglist);
-    return (times(arg1, makeint(-1)));
+    return (times(arg1,makeint(-1)));
 }
 
 int f_times(int arglist)
@@ -1652,35 +1643,35 @@ int f_times(int arglist)
     checkarg(NUMLIST_TEST, "times", arglist);
     res = makeint(1);
     while (!(IS_NIL(arglist))) {
-	arg = car(arglist);
+    arg = car(arglist);
 	arglist = cdr(arglist);
-	res = times(res, arg);
+	res = times(res,arg);
     }
     return (makeint(res));
 }
 
 int f_quotient(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
 
     checkarg(LEN2_TEST, "quotitent", arglist);
     checkarg(INTLIST_TEST, "quotient", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (makeint(GET_INT(arg1) / GET_INT(arg2)));
+    return (makeint(GET_INT(arg1)/GET_INT(arg2)));
 }
 
 int f_divide(int arglist)
 {
-    int arg1, arg2, q, m;
+    int arg1,arg2,q,m;
 
     checkarg(LEN2_TEST, "divide", arglist);
     checkarg(INTLIST_TEST, "divide", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    q = makeint(GET_INT(arg1) / GET_INT(arg2));
-    m = makeint(GET_INT(arg1) % GET_INT(arg2));
-    return (cons(q, cons(m, NIL)));
+    q = makeint(GET_INT(arg1)/GET_INT(arg2));
+    m = makeint(GET_INT(arg1)%GET_INT(arg2));
+    return(cons(q,cons(m,NIL)));
 }
 
 int f_max(int arglist)
@@ -1691,8 +1682,8 @@ int f_max(int arglist)
     res = car(arglist);
     arglist = cdr(arglist);
     while (!(IS_NIL(arglist))) {
-	if (greaterp(car(arglist), res))
-	    res = car(arglist);
+    if(greaterp(car(arglist),res))
+    res = car(arglist);
 	arglist = cdr(arglist);
     }
     return (res);
@@ -1706,8 +1697,8 @@ int f_min(int arglist)
     res = car(arglist);
     arglist = cdr(arglist);
     while (!(IS_NIL(arglist))) {
-	if (lessp(car(arglist), res))
-	    res = car(arglist);
+    if(lessp(car(arglist),res))
+    res = car(arglist);
 	arglist = cdr(arglist);
     }
     return (res);
@@ -1721,36 +1712,36 @@ int f_recip(int arglist)
     checkarg(LEN1_TEST, "recip", arglist);
     checkarg(NUMLIST_TEST, "recip", arglist);
     arg1 = car(arglist);
-    if (integerp(arg1))
-	return (makeint(0));
+    if(integerp(arg1))
+        return(makeint(0));
 
-    return (quotient(makeflt(1.0), arg1));
+    return(quotient(makeflt(1.0),arg1));
 }
 
 int f_remainder(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
 
     checkarg(LEN2_TEST, "remainder", arglist);
     checkarg(INTLIST_TEST, "remainder", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (makeint(GET_INT(arg1) % GET_INT(arg2)));
+    return(makeint(GET_INT(arg1)%GET_INT(arg2)));
 }
 
 int f_expt(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
 
     checkarg(LEN2_TEST, "expt", arglist);
     checkarg(INTLIST_TEST, "expt", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (GET_INT(arg2) == 0)
-	return (makeint(1));
-    else if (GET_INT(arg1) < 0)
-	error(ILLEGAL_OBJ_ERR, "expt", arglist);
-    return (makeint(power(GET_INT(arg1), GET_INT(arg2))));
+    if(GET_INT(arg2) == 0)
+        return(makeint(1));
+    else if(GET_INT(arg1)<0)
+        error(ILLEGAL_OBJ_ERR,"expt",arglist);
+    return(makeint(power(GET_INT(arg1),GET_INT(arg2))));
 }
 
 
@@ -1784,8 +1775,8 @@ int f_car(int arglist)
 
     checkarg(LEN1_TEST, "car", arglist);
     arg1 = car(arglist);
-    if (atomp(arg1))
-	error(ARG_LIS_ERR, "car", arg1);
+    if(atomp(arg1))
+        error(ARG_LIS_ERR,"car",arg1);
     return (car(arg1));
 }
 
@@ -1795,8 +1786,8 @@ int f_cdr(int arglist)
 
     checkarg(LEN1_TEST, "cdr", arglist);
     arg1 = car(arglist);
-    if (atomp(arg1))
-	error(ARG_LIS_ERR, "cdr", arg1);
+    if(atomp(arg1))
+        error(ARG_LIS_ERR,"cdr",arg1);
     return (cdr(arg1));
 }
 
@@ -1874,40 +1865,40 @@ int f_list(int arglist)
 
 int f_reverse(int arglist)
 {
-    int arg1, res;
+    int arg1,res;
     checkarg(LEN1_TEST, "reverse", arglist);
     checkarg(LIST_TEST, "reverse", car(arglist));
 
     arg1 = car(arglist);
     res = NIL;
-    while (!nullp(arg1)) {
-	res = cons(car(arg1), res);
-	arg1 = cdr(arg1);
+    while(!nullp(arg1)){
+        res = cons(car(arg1),res);
+        arg1 = cdr(arg1);
     }
-    return (res);
+    return(res);
 }
 
 int f_assoc(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
 
     checkarg(LEN2_TEST, "assoc", arglist);
     checkarg(SYMBOL_TEST, "assoc", car(arglist));
     checkarg(LIST_TEST, "assoc", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (assoc(arg1, arg2));
+    return(assoc(arg1,arg2));
 }
 
 int f_member(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
 
     checkarg(LEN2_TEST, "member", arglist);
     checkarg(LIST_TEST, "member", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (member(arg1, arg2));
+    return(member(arg1,arg2));
 }
 
 
@@ -1924,28 +1915,26 @@ int f_nconc(int arglist)
     return (nconc(car(arglist), cadr(arglist)));
 }
 
-int f_rplaca(int arglist)
-{
-    int arg1, arg2;
+int f_rplaca(int arglist){
+    int arg1,arg2;
 
     checkarg(LEN2_TEST, "rplaca", arglist);
     checkarg(LIST_TEST, "rplaca", car(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    SET_CAR(arg1, arg2);
-    return (arg1);
+    SET_CAR(arg1,arg2);
+    return(arg1);
 }
 
-int f_rplacd(int arglist)
-{
-    int arg1, arg2;
+int f_rplacd(int arglist){
+    int arg1,arg2;
 
     checkarg(LEN2_TEST, "rplacd", arglist);
     checkarg(LIST_TEST, "rplacd", car(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    SET_CDR(arg1, arg2);
-    return (arg1);
+    SET_CDR(arg1,arg2);
+    return(arg1);
 }
 
 
@@ -1993,10 +1982,10 @@ int f_onep(int arglist)
     checkarg(NUMLIST_TEST, "onep", arglist);
     arg1 = car(arglist);
 
-    if (integerp(arg1) && GET_INT(arg1) == 1)
+    if (integerp(arg1) && GET_INT(arg1)==1)
 	return (T);
-    else if (floatp(arg1) && fabs(GET_FLT(arg1) - 1.0) < DBL_MIN)
-	return (T);
+    else if(floatp(arg1) && fabs(GET_FLT(arg1)-1.0) < DBL_MIN)
+    return (T);
     else
 	return (NIL);
 }
@@ -2009,10 +1998,10 @@ int f_zerop(int arglist)
     checkarg(NUMLIST_TEST, "zerop", arglist);
     arg1 = car(arglist);
 
-    if (integerp(arg1) && GET_INT(arg1) == 0)
+    if (integerp(arg1) && GET_INT(arg1)==0)
 	return (T);
-    else if (floatp(arg1) && fabs(GET_FLT(arg1)) < DBL_MIN)
-	return (T);
+    else if(floatp(arg1) && fabs(GET_FLT(arg1)) < DBL_MIN)
+    return (T);
     else
 	return (NIL);
 }
@@ -2026,8 +2015,8 @@ int f_minusp(int arglist)
     checkarg(NUMLIST_TEST, "minusp", arglist);
     arg1 = car(arglist);
 
-    if (lessp(arg1, makeint(0)))
-	return (T);
+    if(lessp(arg1,makeint(0)))
+    return (T);
     else
 	return (NIL);
 }
@@ -2043,7 +2032,7 @@ int f_lessp(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (lessp(arg1, arg2))
+    if (lessp(arg1,arg2))
 	return (T);
     else
 	return (NIL);
@@ -2058,7 +2047,7 @@ int f_greaterp(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (greaterp(arg1, arg2))
+    if (greaterp(arg1,arg2))
 	return (T);
     else
 	return (NIL);
@@ -2068,13 +2057,13 @@ int f_greaterp(int arglist)
 int f_gbc(int arglist)
 {
 
-    if (car(arglist) == T)
-	gbc_flag = 1;
-    else if (car(arglist) == NIL)
-	gbc_flag = 0;
-    else if (car(arglist) == makeint(1)) {
-	printf("execute gc!\n");
-	gbc();
+    if(car(arglist) == T)
+        gbc_flag = 1;
+    else if(car(arglist) == NIL)
+        gbc_flag = 0;
+    else if (car(arglist) == makeint(1)){
+        printf("execute gc!\n");
+        gbc();
     }
     return (T);
 }
@@ -2119,34 +2108,34 @@ int f_apply(int arglist)
 
 int f_maplist(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
     checkarg(LEN2_TEST, "maplist", arglist);
     checkarg(LIST_TEST, "maplist", car(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (maplist(arg1, arg2));
+    return(maplist(arg1,arg2));
 
 }
 
 int f_mapcon(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
     checkarg(LEN2_TEST, "mapcon", arglist);
     checkarg(LIST_TEST, "mapcon", car(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (mapcon(arg1, arg2));
+    return(mapcon(arg1,arg2));
 
 }
 
 int f_map(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
     checkarg(LEN2_TEST, "map", arglist);
     checkarg(LIST_TEST, "map", car(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (map(arg1, arg2));
+    return(map(arg1,arg2));
 
 }
 
@@ -2169,10 +2158,10 @@ int f_not(int arglist)
     checkarg(LEN1_TEST, "set", arglist);
 
     arg1 = car(arglist);
-    if (arg1 == NIL)
-	return (T);
-    else
-	return (NIL);
+    if(arg1 == NIL)
+        return(T);
+    else 
+        return(NIL);
 }
 
 
@@ -2183,7 +2172,7 @@ int f_quote(int arglist)
 
     checkarg(LEN1_TEST, "quote", arglist);
     arg1 = car(arglist);
-    return (arg1);
+    return(arg1);
 }
 
 int f_setq(int arglist)
@@ -2197,19 +2186,18 @@ int f_setq(int arglist)
     bindsym(arg1, arg2);
     return (T);
 }
-
 int f_define(int arglist)
 {
-    int arg1, sym, lam;
-    checkarg(DEFLIST_TEST, "define", car(arglist));
+    int arg1,sym,lam;
+    checkarg(DEFLIST_TEST,"define",car(arglist));
     arg1 = car(arglist);
-    while (!nullp(arg1)) {
-	sym = car(car(arg1));
-	lam = eval(cadr(car(arg1)));
-	bindsym(sym, lam);
-	arg1 = cdr(arg1);
+    while(!nullp(arg1)){
+        sym = car(car(arg1));
+        lam = eval(cadr(car(arg1)));
+        bindsym(sym,lam);
+        arg1 = cdr(arg1);
     }
-    return (T);
+    return(T);
 }
 
 
@@ -2219,7 +2207,7 @@ int f_lambda(int arglist)
     checkarg(LEN2_TEST, "lambda", arglist);
     checkarg(LIST_TEST, "lambda", car(arglist));
     checkarg(LIST_TEST, "lambda", cdr(arglist));
-    return (makefunc(arglist));
+    return(makefunc(arglist));
 }
 
 int f_macro(int arglist)
@@ -2283,48 +2271,49 @@ int f_progn(int arglist)
     return (res);
 }
 
-int find_label(int label, int prog)
+int find_label(int label,int prog)
 {
-    while (!nullp(prog)) {
-	if (eqp(car(prog), label))
-	    return (prog);
-	prog = cdr(prog);
+    while(!nullp(prog)){
+        if(eqp(car(prog),label))
+            return(prog);
+        prog = cdr(prog);
     }
-    error(ILLEGAL_OBJ_ERR, "prog", label);
+    error(ILLEGAL_OBJ_ERR,"prog",label);
 
-    return (NIL);
+    return(NIL);
 }
 
 int f_prog(int arglist)
 {
-    int arg1, arg2, res, prog, save;
+    int arg1,arg2,res,prog,save;
 
-    checkarg(LIST_TEST, "prog", car(arglist));
+    checkarg(LIST_TEST,"prog",car(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
     prog = arg2;
     return_flag = 0;
     save = ep;
     res = NIL;
-    while (!nullp(arg1)) {
-	bindsym(car(arg1), NIL);
-	arg1 = cdr(arg1);
+    while(!nullp(arg1)){
+        bindsym(car(arg1),NIL);
+        arg1 = cdr(arg1);
     }
     while (!nullp(arg2)) {
-	res = car(arg2);
-	if (symbolp(res)) {
-	    goto skip;
-	} else if (listp(res) && eqp(car(res), makesym("go"))) {
-	    arg2 = (find_label(cadr(res), prog));
-	    goto skip;
-	}
+    res = car(arg2);
+    if(symbolp(res)){
+        goto skip;
+    }
+    else if(listp(res) && eqp(car(res),makesym("go"))){
+        arg2 = (find_label(cadr(res),prog));
+        goto skip;
+    }
 
 	res = eval(res);
-	if (return_flag) {
-	    ep = save;
-	    return (res);
-	}
-      skip:
+    if(return_flag){
+        ep = save;
+        return(res);
+    }
+    skip:
 	arg2 = cdr(arg2);
     }
     ep = save;
@@ -2334,10 +2323,10 @@ int f_prog(int arglist)
 int f_return(int arglist)
 {
     int arg1;
-    checkarg(LEN1_TEST, "return", arglist);
+    checkarg(LEN1_TEST,"return",arglist);
     arg1 = car(arglist);
     return_flag = 1;
-    return (eval(arg1));
+    return(eval(arg1));
 }
 
 
@@ -2346,31 +2335,30 @@ int f_and(int arglist)
     int res;
 
     res = NIL;
-    while (!nullp(arglist)) {
-	res = eval(car(arglist));
-	if (res == NIL)
-	    return (NIL);
-	arglist = cdr(arglist);
+    while(!nullp(arglist)){
+        res = eval(car(arglist));
+        if(res == NIL)
+            return(NIL);
+        arglist = cdr(arglist);
     }
-    return (res);
+    return(res);
 }
 
 int f_or(int arglist)
 {
     int res;
 
-    while (!nullp(arglist)) {
-	res = eval(car(arglist));
-	if (res != NIL)
-	    return (res);
-	arglist = cdr(arglist);
+    while(!nullp(arglist)){
+        res = eval(car(arglist));
+        if(res != NIL)
+            return(res);
+        arglist = cdr(arglist);
     }
-    return (NIL);
+    return(NIL);
 }
 
-int f_comment(int arglist)
-{
-    return (T);
+int f_comment(int arglist){
+    return(T);
 }
 
 //--------quasi-quote---------------
@@ -2393,7 +2381,7 @@ int quasi_transfer1(int x)
 
 int list1(int x)
 {
-    return (cons(x, NIL));
+    return(cons(x,NIL));
 }
 
 int list2(int x, int y)
@@ -2447,5 +2435,5 @@ int quasi_transfer2(int x, int n)
 	return (list3
 		(makesym("cons"), quasi_transfer2(car(x), n),
 		 quasi_transfer2(cdr(x), n)));
-
+    
 }
