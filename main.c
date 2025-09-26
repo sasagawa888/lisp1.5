@@ -1068,7 +1068,7 @@ int eval(int addr)
     } else if (listp(addr)) {
     if (numberp(car(addr)))
 	    error(ARG_SYM_ERR, "eval", addr);
-	else if ((symbolp(car(addr))) && (HAS_NAME(car(addr), "QUASI-QUOTE")))
+	else if ((symbolp(car(addr))) && (eqp(car(addr), makesym("quasi-quote"))))
         return (eval(quasi_transfer2(cadr(addr), 0)));
 	else if (subrp(car(addr)))
 	    return (apply(eval(car(addr)), evlis(cdr(addr))));
@@ -1355,6 +1355,7 @@ void bindfunc(char *name, tag tag, int (*func)(int))
     bindsym(sym, val);
 }
 
+/*
 void bindfunc1(char *name, int addr)
 {
     int sym, val;
@@ -1366,12 +1367,11 @@ void bindfunc1(char *name, int addr)
     SET_CDR(val, 0);
     bindsym(sym, val);
 }
-
-void bindmacro(char *name, int addr)
+*/
+void bindmacro(int sym, int addr)
 {
-    int sym, val1, val2;
+    int val1, val2;
 
-    sym = makesym(name);
     val1 = freshcell();
     SET_TAG(val1, FUNC);
     SET_BIND(val1, addr);
@@ -2220,7 +2220,7 @@ int f_macro(int arglist)
     checkarg(LIST_TEST, "macro", caddr(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
-    bindmacro(GET_NAME(arg1), arg2);
+    bindmacro(arg1, arg2);
     return (T);
 }
 
