@@ -772,9 +772,17 @@ void gettoken(void)
 	return;
     }
 
+    skip:
     c = fgetc(input_stream);
     while ((c == SPACE) || (c == EOL) || (c == TAB))
 	c = fgetc(input_stream);
+
+    if(c == ';'){
+        while (c != EOL){
+	        c = fgetc(input_stream);
+        }
+        goto skip;
+    }
 
     switch (c) {
     case '(':

@@ -43,6 +43,7 @@ In my reimplementation, I treat DEFINE as an FSUBR, so no explicit QUOTE is need
 
 ```
 (COMMENT THIS IS PUNCH CARD)
+; THIS IS COMMENT
 
 (DEFINE (
     
