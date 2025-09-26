@@ -85,7 +85,31 @@ example:
 ```
 Note that the argument order of mapping functions is different from modern Lisp.
 
-## Simplicity:
+## Debug
+example
+```
+LISP 1.5
+> (trace 'fact)
+T
+> (fact 3)
+ENTER FACT(3)
+ ENTER FACT((SUB1 N))
+  ENTER FACT((SUB1 N))
+   ENTER FACT((SUB1 N))
+   RETURN FACT 1
+  RETURN FACT 1
+ RETURN FACT 2
+RETURN FACT 6
+6
+> (untrace '(fact))
+T
+> (fact 3)
+6
+> 
+
+```
+
+## Simplicity
 The system is written as simply as possible.
 The entire implementation is about 2,300 lines in main.c alone.
 It can serve as a reference for those interested in building their own LISP interpreter.
