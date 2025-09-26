@@ -1079,8 +1079,35 @@ int eval(int addr)
 	    return (apply(eval(car(addr)), evlis(cdr(addr))));
 	else if (fsubrp(car(addr)))
 	    return (apply(eval(car(addr)), cdr(addr)));
-	else if (functionp(car(addr)))
-	    return (apply(eval(car(addr)), evlis(cdr(addr))));
+	else if (functionp(car(addr))){
+        int sym,i,n,res;
+        sym = car(addr);
+        if(GET_CAR(sym) >= 1){
+            SET_CAR(sym,GET_CAR(sym)+1);
+            n = GET_CAR(sym);
+            for(i=2;i<n;i++){
+                printf(" ");
+            }
+            printf("ENTER ");
+            print(sym);
+            print(cdr(addr));
+            printf("\n");
+        }
+	    res = apply(eval(car(addr)), evlis(cdr(addr)));
+        if (GET_CAR(sym) > 1){
+            n = GET_CAR(sym);
+            for(i=2;i<n;i++){
+                printf(" ");
+            }
+            printf("RETURN ");
+            print(sym);
+            printf(" ");
+            print(res);
+            printf("\n");
+            SET_CAR(sym,GET_CAR(sym)-1);
+        }
+        return(res);
+    }
 	else if (macrop(car(addr)))
 	    return (apply(eval(car(addr)), cdr(addr)));
 
@@ -1297,6 +1324,12 @@ void checkarg(int test, char *fun, int arg)
 	    return;
 	else
 	    error(ILLEGAL_OBJ_ERR, fun, arg);
+    case SYMLIST_TEST:
+	if (issymlis(arg))
+	    return;
+	else
+	    error(ILLEGAL_OBJ_ERR, fun, arg);
+    
     }
 }
 
@@ -1332,6 +1365,15 @@ int isdeflis(int arg)
     return (1);
 }
 
+int issymlis(int arg)
+{
+    while(!nullp(arg)){
+        if(!symbolp(arg))
+            return(0);
+        arg = cdr(arg);
+    }
+    return(1);
+}
 
 
 
@@ -1429,6 +1471,8 @@ void initsubr(void)
     defsubr("print", f_print);
     defsubr("prin1", f_prin1);
     defsubr("terpri", f_terpri);
+    defsubr("trace", f_trace);
+    defsubr("untrace", f_untrace);
     defsubr("greaterp", f_greaterp);
     defsubr("lessp", f_lessp);
     defsubr("zerop", f_zerop);
@@ -2107,6 +2151,30 @@ int f_terpri(int arglist)
     printf("\n");
     return(T);
 }
+
+int f_trace(int arglist)
+{
+    int arg1;
+    checkarg(SYMBOL_TEST,"trace",car(arglist));
+    arg1 = car(arglist);
+    SET_CAR(arg1,1);
+    return(T);
+}
+
+int f_untrace(int arglist)
+{
+    int arg1;
+    checkarg(LIST_TEST,"untrace",car(arglist));
+    arg1 = car(arglist);
+    while(!nullp(arg1)){
+        SET_CAR(car(arg1),0);
+        arg1 = cdr(arg1);
+    }
+    return(T);
+}
+
+
+
 
 int f_eval(int arglist)
 {

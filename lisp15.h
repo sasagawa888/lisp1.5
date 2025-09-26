@@ -26,7 +26,6 @@ typedef struct cell {
     flag flag;
 	char *name;
 	union{
-		int intnum;
     	int bind;
 		int ( *subr) ();
 		double fltnum;
@@ -124,6 +123,7 @@ int ap; //arglist pointer
 #define LENS2_TEST		10
 #define COND_TEST		11	
 #define DEFLIST_TEST	12
+#define SYMLIST_TEST	13
 
 
 void initcell(void);
@@ -201,6 +201,7 @@ void checkarg(int test, char *fun, int arg);
 int isintlis(int arg);
 int isnumlis(int arg);
 int isdeflis(int arg);
+int issymlis(int arg);
 
 //---subr-------
 int f_plus(int addr);
@@ -265,6 +266,8 @@ int f_read(int addr);
 int f_print(int addr);
 int f_prin1(int addr);
 int f_terpri(int addr);
+int f_trace(int addr);
+int f_untrace(int addr);
 int f_progn(int addr);
 int f_prog(int addr);
 int f_return(int addr);
