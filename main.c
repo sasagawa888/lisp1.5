@@ -22,6 +22,7 @@ int cell_hash_table[HASHTBSIZE];
 FILE *input_stream;
 int gbc_flag = 0;
 int return_flag = 0;
+int gennum = 1;
 
 int main(int argc, char *argv[])
 {
@@ -1481,6 +1482,7 @@ void initsubr(void)
     defsubr("terpri", f_terpri);
     defsubr("trace", f_trace);
     defsubr("untrace", f_untrace);
+    defsubr("gensym", f_gensym);
     defsubr("greaterp", f_greaterp);
     defsubr("lessp", f_lessp);
     defsubr("zerop", f_zerop);
@@ -2181,7 +2183,14 @@ int f_untrace(int arglist)
     return(T);
 }
 
-
+int f_gensym(int arglist)
+{   
+    char gsym[SYMSIZE];
+    checkarg(LEN0_TEST,"gensym",arglist);
+    sprintf(gsym,"G%05d",gennum);
+    gennum++;
+    return(makesym(gsym));
+}
 
 
 int f_eval(int arglist)

@@ -268,6 +268,7 @@ int f_prin1(int addr);
 int f_terpri(int addr);
 int f_trace(int addr);
 int f_untrace(int addr);
+int f_gensym(int addr);
 int f_progn(int addr);
 int f_prog(int addr);
 int f_return(int addr);
