@@ -24,5 +24,13 @@
             (SETQ I (ADD1 I))
             (GO A))))
 
+(TARAI (LAMBDA (X Y Z)
+         (IF (OR (LESSP X Y) (EQ X Y))
+         Y
+          (TARAI (TARAI (SUB1 X) Y Z)
+                 (TARAI (SUB1 Y) Z X)
+                 (TARAI (SUB1 Z) X Y)))))
+
+
 )) 
 
