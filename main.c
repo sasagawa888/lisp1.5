@@ -1428,6 +1428,7 @@ void initsubr(void)
     defsubr("apply", f_apply);
     defsubr("print", f_print);
     defsubr("prin1", f_prin1);
+    defsubr("terpri", f_terpri);
     defsubr("greaterp", f_greaterp);
     defsubr("lessp", f_lessp);
     defsubr("zerop", f_zerop);
@@ -2098,6 +2099,13 @@ int f_prin1(int arglist)
     checkarg(LEN1_TEST, "prin1", arglist);
     print(car(arglist));
     return (T);
+}
+
+int f_terpri(int arglist)
+{
+    checkarg(LEN0_TEST, "terpri", arglist);
+    printf("\n");
+    return(T);
 }
 
 int f_eval(int arglist)
