@@ -1483,6 +1483,8 @@ void initsubr(void)
     defsubr("trace", f_trace);
     defsubr("untrace", f_untrace);
     defsubr("gensym", f_gensym);
+    defsubr("prop", f_prop);
+    defsubr("get", f_get);
     defsubr("greaterp", f_greaterp);
     defsubr("lessp", f_lessp);
     defsubr("zerop", f_zerop);
@@ -2190,6 +2192,38 @@ int f_gensym(int arglist)
     sprintf(gsym,"G%05d",gennum);
     gennum++;
     return(makesym(gsym));
+}
+
+
+int f_prop(int arglist)
+{
+    int arg1,arg2,arg3,plist,res;
+    checkarg(LEN3_TEST,"prop",arglist);
+    checkarg(SYMBOL_TEST,"prop",car(arglist));
+    checkarg(SYMBOL_TEST,"prop",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    arg3 = caddr(arglist);
+    plist = GET_CDR(arg1);
+    res = assoc(arg2,plist);
+    if(res == NO)
+        SET_CDR(arg1,cons(cons(arg2,arg3),plist));
+    else
+        SET_CDR(res,arg3);
+    return(T);
+}
+
+int f_get(int arglist)
+{
+    int arg1,arg2,res;
+    checkarg(LEN2_TEST,"get",arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    res = assoc(arg2,GET_CDR(arg1));
+    if(res == NO)
+        return(NIL);
+    
+    return(cdr(res));
 }
 
 
