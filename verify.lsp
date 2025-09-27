@@ -62,7 +62,9 @@
 
 ;; Macro/function tests
 (TEST 'LAMBDA ((LAMBDA (X) (PLUS X 1)) 5) 6)
-;(TEST 'MACRO T T) ;; Macro definition only checked in form
+(MACRO INC (X) `(PLUS ,X 1))
+(SETQ A 1)
+(TEST 'MACRO (INC A) 2) ;; Macro definition only checked in form
 
 ;; Print/utility tests
 (TEST 'GENSYM (GENSYM) 'g00001) ;; Only checking form; Gxxxx unique symbol generation
