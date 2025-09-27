@@ -2436,7 +2436,7 @@ int f_prog(int arglist)
 {
     int arg1, arg2, res, prog, save;
 
-    checkarg(LIST_TEST, "prog", car(arglist));
+    checkarg(SYMLIST_TEST, "prog", car(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
     prog = arg2;
