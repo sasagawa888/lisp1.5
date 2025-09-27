@@ -22,6 +22,7 @@ int cell_hash_table[HASHTBSIZE];
 FILE *input_stream;
 int gbc_flag = 0;
 int return_flag = 0;
+int step_flag = 0;
 int gennum = 1;
 
 int main(int argc, char *argv[])
@@ -1076,6 +1077,11 @@ int eval(int addr)
 {
     int res;
 
+    if(step_flag){
+        print(addr);
+        printf(">> ");
+        getc(stdin);
+    }
     if (atomp(addr)) {
 	if (numberp(addr))
 	    return (addr);
@@ -1421,19 +1427,6 @@ void bindfunc(char *name, tag tag, int (*func)(int))
     bindsym(sym, val);
 }
 
-/*
-void bindfunc1(char *name, int addr)
-{
-    int sym, val;
-
-    sym = makesym(name);
-    val = freshcell();
-    SET_TAG(val, FUNC);
-    SET_BIND(val, addr);
-    SET_CDR(val, 0);
-    bindsym(sym, val);
-}
-*/
 void bindmacro(int sym, int addr)
 {
     int val1, val2;
@@ -1493,6 +1486,7 @@ void initsubr(void)
     defsubr("trace", f_trace);
     defsubr("untrace", f_untrace);
     defsubr("gensym", f_gensym);
+    defsubr("step", f_step);
     defsubr("prop", f_prop);
     defsubr("get", f_get);
     defsubr("greaterp", f_greaterp);
@@ -2202,6 +2196,21 @@ int f_gensym(int arglist)
     sprintf(gsym,"G%05d",gennum);
     gennum++;
     return(makesym(gsym));
+}
+
+int f_step(int arglist){
+    int arg1;
+
+    checkarg(LEN1_TEST,"step",arglist);
+    arg1 = car(arglist);
+    if(arg1 == T)
+        step_flag = 1;
+    else if(arg1 == NIL)
+        step_flag = 0;
+    else 
+        error(ILLEGAL_OBJ_ERR,"step",arg1);
+
+    return(T);
 }
 
 
