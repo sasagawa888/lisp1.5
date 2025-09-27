@@ -186,6 +186,7 @@ int apply(int func, int arg);
 int subrp(int addr);
 int fsubrp(int addr);
 int functionp(int addr);
+int lambdap(int addr);
 int macrop(int addr);
 void initsubr(void);
 void defsubr(char *symname, int(*func)(int));

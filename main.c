@@ -507,6 +507,14 @@ int functionp(int addr)
 	return (0);
 }
 
+int lambdap(int addr)
+{
+    if(listp(addr) && car(addr) == makesym("lambda"))
+        return(1);
+    else 
+        return (0);
+}
+
 int macrop(int addr)
 {
     int val;
@@ -1084,6 +1092,8 @@ int eval(int addr)
 	else if ((symbolp(car(addr)))
 		 && (eqp(car(addr), makesym("quasi-quote"))))
 	    return (eval(quasi_transfer2(cadr(addr), 0)));
+    else if (lambdap(car(addr)))
+        return (apply(eval(car(addr)), cdr(addr)));
 	else if (subrp(car(addr)))
 	    return (apply(eval(car(addr)), evlis(cdr(addr))));
 	else if (fsubrp(car(addr)))
