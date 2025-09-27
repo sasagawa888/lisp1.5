@@ -71,4 +71,4 @@
 (PROP 'ASDF 'A 1)
 (TEST 'GET (GET 'ASDF 'A) 1) ;; PROP operation form check
 
-
+(PRINT 'all-tests-are-ok)
