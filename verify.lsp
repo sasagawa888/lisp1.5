@@ -26,14 +26,18 @@
 (TEST 'EQUAL (EQUAL '(1 2) '(1 2)) T)
 (TEST 'EQUAL (EQUAL '(1 2) '(2 1)) NIL)
 (TEST 'NULL (NULL NIL) T)
+(TEST 'NULL (NULL '()) T)
+(TEST 'NULL (NULL 1) NIL)
 (TEST 'ATOM (ATOM 1) T)
 (TEST 'ATOM (ATOM '(1 2)) NIL)
+(TEST 'ATOM (ATOM 'A) T)
 (TEST 'NUMBERP (NUMBERP 1) T)
 (TEST 'NUMBERP (NUMBERP 'A) NIL)
 (TEST 'SYMBOLP (SYMBOLP 'A) T)
 (TEST 'SYMBOLP (SYMBOLP 1) NIL)
 (TEST 'LISTP (LISTP '(1 2)) T)
 (TEST 'LISTP (LISTP 1) NIL)
+(TEST 'LISTP (LISTP '()) T)
 
 ;; List operation tests
 (TEST 'CAR (CAR '(1 2 3)) 1)
@@ -44,6 +48,12 @@
 (TEST 'LENGTH (LENGTH '(1 2 3)) 3)
 (TEST 'APPEND (APPEND '(1 2) '(3 4)) '(1 2 3 4))
 (TEST 'NCONC (NCONC '(1 2) '(3 4)) '(1 2 3 4))
+
+;; LOGIC
+(TEST 'AND (AND T NIL T) NIL)
+(TEST 'AND (AND T T T) T)
+(TEST 'OR (OR 1 T) 1)
+(TEST 'OR (OR NIL T) T)
 
 ;; Conditional/control tests
 (TEST 'IF (IF T 1 2) 1)
