@@ -358,6 +358,7 @@ void clrcell(int addr)
     SET_CAR(addr, 0);
     SET_CDR(addr, 0);
     SET_BIND(addr, 0);
+    SET_TR(addr, 0);
 }
 
 // If the number of free cells falls below a certain threshold, trigger GBC.
@@ -501,10 +502,13 @@ int functionp(int addr)
 {
     int val;
 
+    if(symbolp(addr)){
     val = findsym(addr);
     if (val != NO)
 	return (IS_FUNC(val));
-    else
+    } else if(listp(addr) && functionp(car(addr)))
+    return(IS_FUNC(eval(addr)));
+    
 	return (0);
 }
 
@@ -1078,9 +1082,12 @@ int eval(int addr)
     int res;
 
     if(step_flag){
+        int c;
         print(addr);
         printf(">> ");
-        getc(stdin);
+        c = getc(stdin);
+        if(c == 'q')
+            longjmp(buf, 1);
     }
     if (atomp(addr)) {
 	if (numberp(addr))
@@ -1107,9 +1114,9 @@ int eval(int addr)
 	else if (functionp(car(addr))){
         int sym,i,n,res;
         sym = car(addr);
-        if(GET_CAR(sym) >= 1){
-            SET_CAR(sym,GET_CAR(sym)+1);
-            n = GET_CAR(sym);
+        if(GET_TR(sym) >= 1){
+            SET_TR(sym,GET_TR(sym)+1);
+            n = GET_TR(sym);
             for(i=2;i<n;i++){
                 printf(" ");
             }
@@ -1119,8 +1126,8 @@ int eval(int addr)
             printf("\n");
         }
 	    res = apply(eval(car(addr)), evlis(cdr(addr)));
-        if (GET_CAR(sym) > 1){
-            n = GET_CAR(sym);
+        if (GET_TR(sym) > 1){
+            n = GET_TR(sym);
             for(i=2;i<n;i++){
                 printf(" ");
             }
@@ -1129,7 +1136,7 @@ int eval(int addr)
             printf(" ");
             print(res);
             printf("\n");
-            SET_CAR(sym,GET_CAR(sym)-1);
+            SET_TR(sym,GET_TR(sym)-1);
         }
         return(res);
     }
@@ -2173,7 +2180,7 @@ int f_trace(int arglist)
     int arg1;
     checkarg(SYMBOL_TEST,"trace",car(arglist));
     arg1 = car(arglist);
-    SET_CAR(arg1,1);
+    SET_TR(arg1,1);
     return(T);
 }
 
@@ -2183,7 +2190,7 @@ int f_untrace(int arglist)
     checkarg(LIST_TEST,"untrace",car(arglist));
     arg1 = car(arglist);
     while(!nullp(arg1)){
-        SET_CAR(car(arg1),0);
+        SET_TR(car(arg1),0);
         arg1 = cdr(arg1);
     }
     return(T);
