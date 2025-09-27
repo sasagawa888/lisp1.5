@@ -1,0 +1,8 @@
+; Funarg Problem
+(DEFINE ((P (LAMBDA (X) (QUOTE OOPS)))))
+
+(DEFINE ((COMPLEMENT (LAMBDA (P) (LAMBDA (X) (NOT (P X)))))))
+
+;((COMPLEMENT ATOM) (QUOTE  FOO     ))) ==> NIL
+;((COMPLEMENT ATOM) (QUOTE (FOO BAR)))) ==> NIL
+
