@@ -1387,7 +1387,7 @@ int isdeflis(int arg)
 int issymlis(int arg)
 {
     while(!nullp(arg)){
-        if(!symbolp(arg))
+        if(!symbolp(car(arg)))
             return(0);
         arg = cdr(arg);
     }
@@ -2444,7 +2444,7 @@ int f_prog(int arglist)
     save = ep;
     res = NIL;
     while (!nullp(arg1)) {
-	bindsym(car(arg1), NIL);
+	ep = cons(cons(car(arg1), NIL),ep);
 	arg1 = cdr(arg1);
     }
     while (!nullp(arg2)) {

@@ -48,6 +48,7 @@
 (TEST 'CONS (CONS 1 '(2 3)) '(1 2 3))
 (TEST 'CONS (CONS 'A 'B) '(A . B))
 (TEST 'LIST (LIST 1 2 3) '(1 2 3))
+(TEST 'LIST (LIST) NIL)
 (TEST 'REVERSE (REVERSE '(1 2 3)) '(3 2 1))
 (TEST 'LENGTH (LENGTH '(1 2 3)) 3)
 (TEST 'APPEND (APPEND '(1 2) '(3 4)) '(1 2 3 4))
