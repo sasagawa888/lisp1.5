@@ -65,7 +65,7 @@
 (TEST 'IF (IF T 1 2) 1)
 (TEST 'IF (IF NIL 1 2) 2)
 (TEST 'PROGN (PROGN (EQ 1 1) 2) 2)
-(TEST 'PROG (PROG (EQ 1 1) 2) 2)
+(TEST 'PROG (PROG () (EQ 1 1) 2) 2)
 
 ;; Macro/function tests
 (TEST 'LAMBDA ((LAMBDA (X) (PLUS X 1)) 5) 6)
