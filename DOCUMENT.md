@@ -116,9 +116,23 @@ T
 - (step t)  Enable the stepper
 - (step nil)　Disable the steppter
 
+A prompt >> appears each time eval is called, waiting for user input. Pressing Enter continues to the next step, and entering q aborts the execution.
+
 example:
 ```
-
+LISP 1.5
+> (step t)
+T
+> (foo 1)
+(FOO 1) in [] >> 1 in [] >> 
+FOO in [] >> 
+X in [(X . 1)] >> 
+1
+> (step nil)
+(STEP NIL) in [] >> NIL in [] >> 
+STEP in [] >> 
+T
+> 
 ```
 
 ## Simplicity
