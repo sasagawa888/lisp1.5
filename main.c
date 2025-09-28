@@ -24,6 +24,7 @@ int gbc_flag = 0;
 int return_flag = 0;
 int step_flag = 0;
 int gennum = 1;
+int oblist_len;
 
 int main(int argc, char *argv[])
 {
@@ -1077,6 +1078,19 @@ void printlist(int addr)
 }
 
 //--------eval---------------        
+void print_env(void){
+    int i,n,env;
+
+    n = length(ep) - oblist_len;
+    env = ep;
+    printf("[");
+    for(i=0;i<n;i++){
+        print(car(env));
+        env = cdr(env);
+    }
+    printf("]");
+}
+
 int eval(int addr)
 {
     int res;
@@ -1084,7 +1098,9 @@ int eval(int addr)
     if(step_flag){
         int c;
         print(addr);
-        printf(">> ");
+        printf(" in ");
+        print_env();
+        printf(" >> ");
         c = getc(stdin);
         if(c == 'q')
             longjmp(buf, 1);
@@ -2210,8 +2226,10 @@ int f_step(int arglist){
 
     checkarg(LEN1_TEST,"step",arglist);
     arg1 = car(arglist);
-    if(arg1 == T)
+    if(arg1 == T){
+        oblist_len = length(ep);
         step_flag = 1;
+    }
     else if(arg1 == NIL)
         step_flag = 0;
     else 

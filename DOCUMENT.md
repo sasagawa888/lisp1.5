@@ -87,6 +87,8 @@ example:
 Note that the argument order of mapping functions is different from modern Lisp.
 
 ## Debug
+
+### Trace/Untrace
 example
 ```
 LISP 1.5
@@ -107,6 +109,15 @@ T
 > (fact 3)
 6
 > 
+
+```
+
+### Stepper
+- (step t)  Enable the stepper
+- (step nil)　Disable the steppter
+
+example:
+```
 
 ```
 
