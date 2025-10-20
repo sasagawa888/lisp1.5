@@ -888,6 +888,10 @@ int flttoken(char buf[])
 	while ((c = buf[i]) != NUL)
 	    if (isdigit(c))
 		i++;		// case {+123..., -123...}
+        else if (c == '.')
+		goto dot;
+	    else if (c == 'e' || c == 'E')
+		goto exp;
 	    else
 		return (0);
     } else {
