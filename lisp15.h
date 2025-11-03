@@ -63,7 +63,7 @@ typedef struct token {
 #define SET_TR(addr,x)		heap[addr].trace = x
 #define SET_FLT(addr,x)		heap[addr].val.fltnum = x
 #define	SET_BIND(addr,x)	heap[addr].val.bind = x
-#define SET_NAME(addr,x)	heap[addr].name = (char *)malloc(SYMSIZE); strcpy(heap[addr].name,x);
+#define SET_NAME(addr,x)	heap[addr].name = (char *)malloc(strlen(x)+1); strcpy(heap[addr].name,x);
 #define SET_SUBR(addr,x)	heap[addr].val.subr = x
 #define IS_SYMBOL(addr)		heap[addr].tag == SYM
 #define IS_NUMBER(addr)		heap[addr].tag == NUM
