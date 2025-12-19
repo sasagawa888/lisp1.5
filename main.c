@@ -62,7 +62,6 @@ int main(int argc, char *argv[])
 	while (1) {
 	    printf("> ");
 	    fflush(stdout);
-	    fflush(stdin);
 	    print(eval(read()));
 	    printf("\n");
 	    fflush(stdout);
@@ -827,7 +826,7 @@ void gettoken(void)
     default:{
 	    pos = 0;
 	    stok.buf[pos++] = c;
-	    while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE) &&
+	    while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE-1) &&
 		   (c != SPACE) && (c != '(') && (c != ')') &&
 		   (c != '`') && (c != ',') && (c != '@'))
 		stok.buf[pos++] = c;
